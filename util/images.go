@@ -20,9 +20,9 @@ func (o *StaticObject) Draw(t pixel.Target) {
   o.Sprite.Draw(t, pixel.IM.Moved(o.PosV))
 }
 
-func NewStaticObject(pic pixel.Picture, pos pixel.Vec, canCollide bool) *StaticObject {
+func NewStaticObject(spr *pixel.Sprite, pos pixel.Vec, canCollide bool) *StaticObject {
   return &StaticObject{
-    pixel.NewSprite(pic, pic.Bounds()),
+    spr,
     pos,
     canCollide,
   }

@@ -23,8 +23,8 @@ const (
 )
 
 var (
-  allScenes map[string]scenes.IScene = make(map[string]scenes.IScene)
-  sceneChange chan string = make(chan string, 1)
+  allScenes map[string]scenes.IScene  = make(map[string]scenes.IScene)
+  sceneChange chan string             = make(chan string, 1)
 )
 
 type GameInfo struct {
@@ -37,25 +37,20 @@ type GameInfo struct {
 }
 
 func (g *GameInfo) Update(dt float64) {
-  g.ActiveScene.Update(g.Win, g.CamPos, g.Player, dt)
+  g.ActiveScene.Update(g.Win, g.CamPos, g.Player, dt, g.SpriteMap)
+  g.SpriteMap["house"].Draw(g.Win, pixel.IM.Moved(pixel.V(0, 384)))
+  g.Batch.Draw(g.Win)
+
+  g.Player.Update(g.Win, *(g.CamPos))
+
+  newCamPos := util.MoveCamera(g.Win, g.CamPos, dt)
+  if !g.Player.Collides(g.ActiveScene.GetCollidables(), newCamPos) {
+    g.CamPos = &newCamPos
+  }
   hud.Draw(g.Win, *g.CamPos)
 }
 
 func NewGame(win *pixelgl.Window, camPos *pixel.Vec, initialscene string) *GameInfo {
-  allScenes["menu"] = scenes.GetScene("menu", &sceneChange)
-  allScenes["home"] = scenes.GetScene("home", &sceneChange)
-  allScenes["farm"] = scenes.GetScene("farm", &sceneChange)
-  allScenes["inventory"] = scenes.GetScene("inventory", &sceneChange)
-
-  g := GameInfo{
-    win,
-    camPos,
-    &(mob.CharacterMob{}),
-    allScenes[initialscene],
-    make(map[string]*pixel.Sprite),
-    &(pixel.Batch{}),
-  }
-
   pic, err := util.LoadPic(spriteMapPath)
   if err != nil {
     log.Fatal(err)
@@ -66,7 +61,9 @@ func NewGame(win *pixelgl.Window, camPos *pixel.Vec, initialscene string) *GameI
     log.Fatal(err)
   }
   defer spriteF.Close()
+
   csvFile := csv.NewReader(spriteF)
+  spriteMap := make(map[string]*pixel.Sprite)
   for {
     spr, err := csvFile.Read()
     if err == io.EOF {
@@ -81,23 +78,39 @@ func NewGame(win *pixelgl.Window, camPos *pixel.Vec, initialscene string) *GameI
     w, _ := strconv.ParseFloat(spr[3], 64)
     h, _ := strconv.ParseFloat(spr[4], 64)
     r := pixel.R(x*spriteMapWidth, y*spriteMapWidth, w*spriteMapWidth+x*spriteMapWidth, h*spriteMapWidth+y*spriteMapWidth)
-    g.SpriteMap[name] = pixel.NewSprite(pic, r)
+    spriteMap[name] = pixel.NewSprite(pic, r)
   }
 
   charSprites := make(map[int]*pixel.Sprite)
-  charSprites[0] = g.SpriteMap["player"]
-  g.Player, err = mob.GetChar(charSprites)
+  charSprites[0] = spriteMap["player"]
+  player, err := mob.GetChar(charSprites)
   if err != nil {
     log.Fatal(err)
   }
 
-  g.ActiveScene.Init()
+  allScenes["menu"] = scenes.GetScene("menu", &sceneChange, spriteMap, pic)
+  allScenes["home"] = scenes.GetScene("home", &sceneChange, spriteMap, pic)
+  allScenes["farm"] = scenes.GetScene("farm", &sceneChange, spriteMap, pic)
+  allScenes["inventory"] = scenes.GetScene("inventory", &sceneChange, spriteMap, pic)
+
+  batch := pixel.NewBatch(&pixel.TrianglesData{}, pic)
+
+  g := GameInfo{
+    win,
+    camPos,
+    player,
+    allScenes[initialscene],
+    spriteMap,
+    batch,
+  }
+
+  g.ActiveScene.Init(g.Batch)
 
   go func(g *GameInfo) {
     for !win.Closed() {
       newScene := <- sceneChange
       g.ActiveScene = allScenes[newScene]
-      g.ActiveScene.Init()
+      g.ActiveScene.Init(g.Batch)
     }
   }(&g)
 
