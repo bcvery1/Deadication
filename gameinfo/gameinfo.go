@@ -22,8 +22,8 @@ type GameInfo struct {
 }
 
 func (g *GameInfo) Update(dt float64) {
-  hud.Draw(g.Win, *g.CamPos)
   g.ActiveScene.Update(g.Win, g.CamPos, g.Player, dt)
+  hud.Draw(g.Win, *g.CamPos)
 }
 
 func NewGame(win *pixelgl.Window, camPos *pixel.Vec, player *mob.CharacterMob, initialscene string) *GameInfo {
