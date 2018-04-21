@@ -29,7 +29,7 @@ func run() {
     log.Fatal(err)
   }
   win.SetSmooth(true)
-  win.Clear(colornames.White)
+  win.Clear(colornames.Forestgreen)
 
   characterSprite, err := mob.GetCharacterSprite()
   if err != nil {
