@@ -23,6 +23,7 @@ func run() {
   if err != nil {
     log.Fatal(err)
   }
+  win.SetSmooth(true)
 
   for !win.Closed() {
     win.Update()
