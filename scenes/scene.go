@@ -22,7 +22,7 @@ func (s *Scene) Update(win *pixelgl.Window, camPos *pixel.Vec, char *mob.Charact
 func (s *Scene) Init(batch *pixel.Batch) {
   batch.Clear()
   for _, obj := range s.collidableObjs {
-    obj.Sprite.Draw(batch, pixel.IM.Moved(obj.PosV))
+    obj.Draw(batch)
   }
 }
 

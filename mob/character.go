@@ -9,7 +9,7 @@ import (
 
 const (
   characterImagePath string = "assets/images/zombie.png"
-  charScale float64 = 0.5
+  charScale float64 = 0.75
   maxHealth int = 100
   maxHunger int = 100
   // How much HP is lost while starving
