@@ -40,14 +40,8 @@ func rectCollide(r1, r2 pixel.Rect) bool {
 }
 
 func (c *CharacterMob) Collides(statics []*util.StaticObject, camPos pixel.Vec) bool {
-  // playerFrame := c.Sprites[c.State].Frame()
-  // playerSize := playerFrame.Size()
-  // playRect := playerFrame.Moved(camPos).Moved(playerSize.Scaled(-0.5))
   playRect := util.GetSpriteRect(c.Sprites[c.State], camPos)
   for _, obj := range statics {
-    // objFrame := obj.Sprite.Frame()
-    // objSize := objFrame.Size()
-    // objRect := objFrame.Moved(obj.PosV).Moved(objSize.Scaled(-0.5))
     objRect := util.GetSpriteRect(obj.Sprite, obj.PosV)
     if !obj.Collision {
       continue
