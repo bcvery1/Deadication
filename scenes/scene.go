@@ -3,6 +3,7 @@ package scenes
 import (
   "log"
 
+  "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
 )
 
@@ -10,11 +11,11 @@ type Scene struct {
   changeScene *chan string
 }
 
-func (s *Scene) Update(win *pixelgl.Window) {}
+func (s *Scene) Update(win *pixelgl.Window, camPos pixel.Vec) {}
 func (s *Scene) Init() {}
 
 type IScene interface {
-  Update(*pixelgl.Window)
+  Update(*pixelgl.Window, pixel.Vec)
   Init()
 }
 

@@ -24,6 +24,17 @@ type CharacterMob struct {
   Hunger int
 }
 
+func (c *CharacterMob) Collides(statics []util.StaticObject) bool {
+  for _, obj := range statics {
+    log.Println(obj.PosV)
+    if !obj.Collides {
+      continue
+    }
+  }
+
+  return false
+}
+
 func (c CharacterMob) Update(win *pixelgl.Window, camPos pixel.Vec) {
   c.Sprites[c.State].Draw(win, pixel.IM.Moved(camPos).Scaled(camPos, charScale))
 }

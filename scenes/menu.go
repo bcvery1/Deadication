@@ -1,6 +1,7 @@
 package scenes
 
 import (
+  "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
 )
 
@@ -8,7 +9,7 @@ type MenuScene struct {
   Scene
 }
 
-func (s *MenuScene) Update(win *pixelgl.Window) {
+func (s *MenuScene) Update(win *pixelgl.Window, camPos pixel.Vec) {
   *s.changeScene <- "home"
 }
 

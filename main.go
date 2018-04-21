@@ -51,7 +51,7 @@ func run() {
   farmScene := scenes.GetScene("farm", &sceneChange)
   inventory := scenes.GetScene("inventory", &sceneChange)
   // Set active scene to the menu
-  activeScene := "menu"
+  activeScene := "farm"
 
   // Set up camera
   camPos := pixel.ZV
@@ -80,13 +80,13 @@ func run() {
     // Update the active scene
     switch activeScene {
     case "menu":
-      menuScene.Update(win)
+      menuScene.Update(win, camPos)
     case "home":
-      homeScene.Update(win)
+      homeScene.Update(win, camPos)
     case "farm":
-      farmScene.Update(win)
+      farmScene.Update(win, camPos)
     case "inventory":
-      inventory.Update(win)
+      inventory.Update(win, camPos)
     default:
       log.Fatalf("Unknown scene %s", activeScene)
     }
