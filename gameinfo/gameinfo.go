@@ -39,6 +39,8 @@ func NewGame(win *pixelgl.Window, camPos *pixel.Vec, player *mob.CharacterMob, i
     allScenes[initialscene],
   }
 
+  g.ActiveScene.Init()
+
   go func(g *GameInfo) {
     for !win.Closed() {
       newScene := <- sceneChange
