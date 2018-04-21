@@ -27,7 +27,7 @@ type CharacterMob struct {
 func (c *CharacterMob) Collides(statics []util.StaticObject) bool {
   for _, obj := range statics {
     log.Println(obj.PosV)
-    if !obj.Collides {
+    if !obj.Collision {
       continue
     }
   }

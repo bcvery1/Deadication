@@ -19,12 +19,13 @@ type FarmScene struct {
   Scene
   houseImg    *pixel.Sprite
   treesbatch  *pixel.Batch
-  treeObjs    []util.StaticObjects
+  treeObjs    []*util.StaticObject
 }
 
-func (f *FarmScene) Update(win *pixelgl.Window, camPos pixel.Vec) {
+func (f *FarmScene) Update(win *pixelgl.Window, camPos *pixel.Vec, char *mob.CharacterMob, dt float64) {
+  char.Update(win, *camPos)
   f.houseImg.Draw(win, pixel.IM.Moved(pixel.V(0, 384)))
-
+  util.MoveCamera(win, camPos, dt)
 }
 
 func (f *FarmScene) Init() {
@@ -44,12 +45,12 @@ func CreateFarm(changeScene *chan string) *FarmScene {
   }
   batch := pixel.NewBatch(&pixel.TrianglesData{}, treePic)
 
-  t1 := util.NewStaticObject(f.treePics[0], pixel.V(100, 100), true)
+  t1 := util.NewStaticObject(treePic, pixel.V(100, 100), true)
 
   return &FarmScene{
     Scene{changeScene},
     houseSprite,
     batch,
-    []util.StaticObjects{t1},
+    []*util.StaticObject{t1},
   }
 }
