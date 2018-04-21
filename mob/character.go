@@ -10,7 +10,7 @@ import (
 )
 
 const (
-  characterImagePath string = "assets/zombie.png"
+  characterImagePath string = "assets/images/zombie.png"
   charScale float64 = 0.5
   maxHealth int = 100
   maxHunger int = 100
