@@ -11,8 +11,8 @@ import (
 )
 
 type StaticObject struct {
-  Sprite *pixel.Sprite
-  PosV pixel.Vec
+  Sprite    *pixel.Sprite
+  PosV      pixel.Vec
   Collision bool
 }
 
