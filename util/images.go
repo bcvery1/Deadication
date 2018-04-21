@@ -45,3 +45,9 @@ func LoadPic(path string) (pixel.Picture, error) {
 
   return pixel.PictureDataFromImage(img), nil
 }
+
+func GetSpriteRect(s *pixel.Sprite, camPos pixel.Vec) pixel.Rect {
+  frame := s.Frame()
+  size := frame.Size()
+  return frame.Moved(camPos).Moved(size.Scaled(-0.5))
+}
