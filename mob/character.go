@@ -24,14 +24,31 @@ type CharacterMob struct {
   Hunger int
 }
 
+func Inv(v pixel.Vec) pixel.Vec {
+  return pixel.Vec{
+    -v.X,
+    -v.Y,
+  }
+}
+
 func rectCollide(r1, r2 pixel.Rect) bool {
-  return r1.Intersect(r2).Area() == 0
+  xCol1 := (r1.Max.X > r2.Min.X && r1.Max.X < r2.Max.X) || (r1.Min.X > r2.Min.X && r1.Min.X < r2.Max.X)
+  yCol1 := (r1.Max.Y > r2.Min.Y && r1.Max.Y < r2.Max.Y) || (r1.Min.Y > r2.Min.Y && r1.Min.Y < r2.Max.Y)
+
+  xCol2 := (r2.Max.X > r1.Min.X && r2.Max.X < r1.Max.X) || (r2.Min.X > r1.Min.X && r2.Min.X < r1.Max.X)
+  yCol2 := (r2.Max.Y > r1.Min.Y && r2.Max.Y < r1.Max.Y) || (r2.Min.Y > r1.Min.Y && r2.Min.Y < r1.Max.Y)
+
+  return (xCol1 && yCol1) || (xCol2 && yCol2)
 }
 
 func (c *CharacterMob) Collides(statics []*util.StaticObject, camPos pixel.Vec) bool {
+  playerFrame := c.Sprites[c.State].Frame()
+  playerSize := playerFrame.Size()
+  playRect := playerFrame.Moved(camPos).Moved(playerSize.Scaled(-0.5))
   for _, obj := range statics {
-    playRect := c.Sprites[c.State].Frame().Moved(camPos)
-    objRect := obj.Sprite.Frame()
+    objFrame := obj.Sprite.Frame()
+    objSize := objFrame.Size()
+    objRect := objFrame.Moved(obj.PosV).Moved(objSize.Scaled(-0.5))
     if !obj.Collision {
       continue
     }
