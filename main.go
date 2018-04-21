@@ -4,6 +4,7 @@ import (
   "log"
   "time"
 
+  "Deadication/hud"
   "Deadication/mob"
 
   "github.com/faiface/pixel"
@@ -49,6 +50,9 @@ func run() {
   for !win.Closed() {
     // Clear previously drawn images
     win.Clear(backgroundColour)
+
+    // Draw HUD to screen
+    hud.Draw(win, camPos)
 
     // Draw the character centre screen, move it with the camera position
     character.Update(win, camPos)
