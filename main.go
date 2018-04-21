@@ -2,6 +2,7 @@ package main
 
 import (
   "log"
+  "time"
 
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
@@ -25,7 +26,11 @@ func run() {
   }
   win.SetSmooth(true)
 
+  last := time.Now()
   for !win.Closed() {
+    dt := time.Since(last).Seconds()
+    last = time.Now()
+    
     win.Update()
   }
 }
