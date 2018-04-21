@@ -5,7 +5,6 @@ import (
   "time"
 
   "Deadication/gameinfo"
-  "Deadication/mob"
 
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
@@ -37,13 +36,7 @@ func run() {
   win.SetSmooth(true)
   win.Clear(backgroundColour)
 
-  // Get main characters sprite
-  character, err := mob.GetChar()
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  game := gameinfo.NewGame(win, &(pixel.ZV), character, "farm")
+  game := gameinfo.NewGame(win, &(pixel.ZV), "farm")
 
   last := time.Now()
   for !win.Closed() {

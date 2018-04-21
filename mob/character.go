@@ -1,8 +1,6 @@
 package mob
 
 import (
-  "log"
-
   "Deadication/util"
 
   "github.com/faiface/pixel"
@@ -94,28 +92,7 @@ func (c *CharacterMob) Heal(hp int) {
   }
 }
 
-// Loads the main characters sprite
-// BUG(needs to load frames of animation)
-func GetCharacterSprite() (*pixel.Sprite, error) {
-  pic, err := util.LoadPic(characterImagePath)
-  if err != nil {
-    return nil, err
-  }
-  // Get single frame of animation
-  sprite := pixel.NewSprite(pic, pic.Bounds())
-
-  return sprite, nil
-}
-
-func GetChar() (*CharacterMob, error) {
-  stateSprites := make(map[int]*pixel.Sprite)
-  // Idle
-  sprite, err := GetCharacterSprite()
-  stateSprites[0] = sprite
-  if err != nil {
-    log.Fatal(err)
-  }
-
+func GetChar(stateSprites map[int]*pixel.Sprite) (*CharacterMob, error) {
   return &CharacterMob{
     Mob{
       stateSprites,

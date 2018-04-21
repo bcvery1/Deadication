@@ -41,7 +41,7 @@ func (g *GameInfo) Update(dt float64) {
   hud.Draw(g.Win, *g.CamPos)
 }
 
-func NewGame(win *pixelgl.Window, camPos *pixel.Vec, player *mob.CharacterMob, initialscene string) *GameInfo {
+func NewGame(win *pixelgl.Window, camPos *pixel.Vec, initialscene string) *GameInfo {
   allScenes["menu"] = scenes.GetScene("menu", &sceneChange)
   allScenes["home"] = scenes.GetScene("home", &sceneChange)
   allScenes["farm"] = scenes.GetScene("farm", &sceneChange)
@@ -50,7 +50,7 @@ func NewGame(win *pixelgl.Window, camPos *pixel.Vec, player *mob.CharacterMob, i
   g := GameInfo{
     win,
     camPos,
-    player,
+    &(mob.CharacterMob{}),
     allScenes[initialscene],
     make(map[string]*pixel.Sprite),
     &(pixel.Batch{}),
@@ -82,6 +82,13 @@ func NewGame(win *pixelgl.Window, camPos *pixel.Vec, player *mob.CharacterMob, i
     h, _ := strconv.ParseFloat(spr[4], 64)
     r := pixel.R(x*spriteMapWidth, y*spriteMapWidth, w*spriteMapWidth+x*spriteMapWidth, h*spriteMapWidth+y*spriteMapWidth)
     g.SpriteMap[name] = pixel.NewSprite(pic, r)
+  }
+
+  charSprites := make(map[int]*pixel.Sprite)
+  charSprites[0] = g.SpriteMap["player"]
+  g.Player, err = mob.GetChar(charSprites)
+  if err != nil {
+    log.Fatal(err)
   }
 
   g.ActiveScene.Init()
