@@ -1,12 +1,25 @@
 package gameinfo
 
 import (
+  "encoding/csv"
+  "log"
+  "io"
+  "os"
+  "strconv"
+
   "Deadication/hud"
   "Deadication/mob"
   "Deadication/scenes"
+  "Deadication/util"
 
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
+)
+
+const (
+  spriteMapCSV string = "assets/images/spriteLayout.csv"
+  spriteMapPath string = "assets/images/map.png"
+  spriteMapWidth float64 = 32
 )
 
 var (
@@ -15,10 +28,12 @@ var (
 )
 
 type GameInfo struct {
-  Win *pixelgl.Window
-  CamPos *pixel.Vec
-  Player *mob.CharacterMob
+  Win         *pixelgl.Window
+  CamPos      *pixel.Vec
+  Player      *mob.CharacterMob
   ActiveScene scenes.IScene
+  SpriteMap   map[string]*pixel.Sprite
+  Batch       *pixel.Batch
 }
 
 func (g *GameInfo) Update(dt float64) {
@@ -37,6 +52,36 @@ func NewGame(win *pixelgl.Window, camPos *pixel.Vec, player *mob.CharacterMob, i
     camPos,
     player,
     allScenes[initialscene],
+    make(map[string]*pixel.Sprite),
+    &(pixel.Batch{}),
+  }
+
+  pic, err := util.LoadPic(spriteMapPath)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  spriteF, err := os.Open(spriteMapCSV)
+  if err != nil {
+    log.Fatal(err)
+  }
+  defer spriteF.Close()
+  csvFile := csv.NewReader(spriteF)
+  for {
+    spr, err := csvFile.Read()
+    if err == io.EOF {
+      break
+    }
+    if err != nil {
+      log.Fatal(err)
+    }
+    name := spr[0]
+    x, _ := strconv.ParseFloat(spr[1], 64)
+    y, _ := strconv.ParseFloat(spr[2], 64)
+    w, _ := strconv.ParseFloat(spr[3], 64)
+    h, _ := strconv.ParseFloat(spr[4], 64)
+    r := pixel.R(x*spriteMapWidth, y*spriteMapWidth, w*spriteMapWidth+x*spriteMapWidth, h*spriteMapWidth+y*spriteMapWidth)
+    g.SpriteMap[name] = pixel.NewSprite(pic, r)
   }
 
   g.ActiveScene.Init()
