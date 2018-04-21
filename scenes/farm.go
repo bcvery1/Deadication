@@ -26,28 +26,34 @@ var (
 
 type FarmScene struct {
   Scene
-  houseImg    *pixel.Sprite
-  treesbatch  *pixel.Batch
-  treeObjs    []*util.StaticObject
+  houseImg        *pixel.Sprite
+  collidableBatch *pixel.Batch
+  collidableObjs  []*util.StaticObject
+  init            bool
 }
 
 func (f *FarmScene) Update(win *pixelgl.Window, camPos *pixel.Vec, char *mob.CharacterMob, dt float64) {
   f.houseImg.Draw(win, pixel.IM.Moved(pixel.V(0, 384)))
-  f.treesbatch.Draw(win)
+  f.collidableBatch.Draw(win)
 
   char.Update(win, *camPos)
+
   newCamPos := util.MoveCamera(win, camPos, dt)
-  if !char.Collides(f.treeObjs, newCamPos) {
+  if !char.Collides(f.collidableObjs, newCamPos) {
     (*camPos) = newCamPos
   }
 }
 
 func (f *FarmScene) Init() {
-  f.treesbatch.Clear()
-  for _, tree := range f.treeObjs {
-    log.Println(tree.PosV)
-    tree.Sprite.Draw(f.treesbatch, pixel.IM.Moved(tree.PosV))
+  if f.init {
+    return
   }
+
+  f.collidableBatch.Clear()
+  for _, obj := range f.collidableObjs {
+    obj.Sprite.Draw(f.collidableBatch, pixel.IM.Moved(obj.PosV))
+  }
+  f.init = true
 }
 
 func CreateFarm(changeScene *chan string) *FarmScene {
@@ -93,5 +99,6 @@ func CreateFarm(changeScene *chan string) *FarmScene {
     houseSprite,
     batch,
     trees,
+    false,
   }
 }
