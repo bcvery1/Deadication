@@ -86,5 +86,7 @@ func GetChar() (*CharacterMob, error) {
       0,
       pixel.IM,
     },
+    maxHealth,
+    maxHunger,
   }, nil
 }
