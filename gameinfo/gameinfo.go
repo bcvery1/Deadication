@@ -20,6 +20,8 @@ const (
   spriteMapCSV string = "assets/images/spriteLayout.csv"
   spriteMapPath string = "assets/images/map.png"
   spriteMapWidth float64 = 32
+  houseX float64 = 0
+  houseY float64 = 384
 )
 
 var (
@@ -38,13 +40,18 @@ type GameInfo struct {
 
 func (g *GameInfo) Update(dt float64) {
   g.ActiveScene.Update(g.Win, g.CamPos, g.Player, dt, g.SpriteMap)
-  g.SpriteMap["house"].Draw(g.Win, pixel.IM.Moved(pixel.V(0, 384)))
+
+  houseV := pixel.V(houseX, houseY)
+  g.SpriteMap["house"].Draw(g.Win, pixel.IM.Moved(houseV).Scaled(houseV, 2.5))
+
   g.Batch.Draw(g.Win)
 
   g.Player.Update(g.Win, *(g.CamPos))
 
+  houseRec := []pixel.Rect{pixel.R(-200, 790, -37, 1080), pixel.R(40, 790, 184, 1080), pixel.R(-195, 935, 184, 1080)}
+
   newCamPos := util.MoveCamera(g.Win, g.CamPos, dt)
-  if !g.Player.Collides(g.ActiveScene.GetCollidables(), newCamPos) {
+  if !g.Player.Collides(g.ActiveScene.GetCollidables(), newCamPos) && !g.Player.CollidesRects(houseRec, newCamPos) {
     g.CamPos = &newCamPos
   }
   hud.Draw(g.Win, *g.CamPos)

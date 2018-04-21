@@ -39,6 +39,17 @@ func rectCollide(r1, r2 pixel.Rect) bool {
   return (xCol1 && yCol1) || (xCol2 && yCol2)
 }
 
+func (c *CharacterMob) CollidesRects(rects []pixel.Rect, camPos pixel.Vec) bool {
+  playRect := util.GetSpriteRect(c.Sprites[c.State], camPos)
+  for _, r := range rects {
+    if rectCollide(playRect, r) {
+      return true
+    }
+  }
+
+  return false
+}
+
 func (c *CharacterMob) Collides(statics []*util.StaticObject, camPos pixel.Vec) bool {
   playRect := util.GetSpriteRect(c.Sprites[c.State], camPos)
   for _, obj := range statics {
