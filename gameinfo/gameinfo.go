@@ -41,6 +41,11 @@ type GameInfo struct {
 func (g *GameInfo) Update(dt float64) {
   g.ActiveScene.Update(g.Win, g.CamPos, g.Player, dt, g.SpriteMap)
 
+  if g.Win.JustPressed(pixelgl.KeyQ) {
+    a := util.GetSpriteRect(g.Player.Sprites[g.Player.State], *g.CamPos).Center()
+    log.Println(a)
+  }
+
   houseV := pixel.V(houseX, houseY)
   g.SpriteMap["house"].Draw(g.Win, pixel.IM.Moved(houseV).Scaled(houseV, 2.5))
 
