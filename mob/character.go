@@ -24,9 +24,17 @@ type CharacterMob struct {
   Hunger int
 }
 
-func (c *CharacterMob) Collides(statics []util.StaticObject) bool {
+func rectCollide(r1, r2 pixel.Rect) bool {
+  return r1.Intersect(r2).Area() == 0
+}
+
+func (c *CharacterMob) Collides(statics []*util.StaticObject, camPos pixel.Vec) bool {
   for _, obj := range statics {
-    log.Println(obj.PosV)
+    // log.Println(c.Sprites[c.State].Frame().Moved(camPos))
+    // log.Println(obj.Sprite.Frame())
+    playRect := c.Sprites[c.State].Frame().Moved(camPos)
+    objRect := obj.Sprite.Frame()
+    log.Println(rectCollide(playRect, objRect))
     if !obj.Collision {
       continue
     }
