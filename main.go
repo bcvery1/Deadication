@@ -63,6 +63,18 @@ func run() {
     select {
     case activeScene = <- sceneChange:
       log.Printf("New scene %s", activeScene)
+      switch activeScene {
+      case "menu":
+        menuScene.Init()
+      case "home":
+        homeScene.Init()
+      case "farm":
+        farmScene.Init()
+      case "inventory":
+        inventory.Init()
+      default:
+        log.Fatalf("Unknown scene %s", activeScene)
+      }
     default:
     }
     // Update the active scene

@@ -11,9 +11,11 @@ type Scene struct {
 }
 
 func (s *Scene) Update(win *pixelgl.Window) {}
+func (s *Scene) Init() {}
 
 type IScene interface {
   Update(*pixelgl.Window)
+  Init()
 }
 
 func GetScene(scenename string, changeScene *chan string) IScene {
