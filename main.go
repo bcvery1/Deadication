@@ -2,7 +2,7 @@ package main
 
 import (
   "log"
-  // "time"
+  "time"
 
   "Deadication/mob"
 
@@ -15,6 +15,11 @@ import (
 const (
   winWidth float64  = 1024
   winHeight float64 = 768
+  camSpeed float64  = 500.0
+)
+
+var (
+  backgroundColour = colornames.Forestgreen
 )
 
 // Main function pixel will run
@@ -29,19 +34,45 @@ func run() {
     log.Fatal(err)
   }
   win.SetSmooth(true)
-  win.Clear(colornames.Forestgreen)
+  win.Clear(backgroundColour)
 
+  // Get main characters sprite
   characterSprite, err := mob.GetCharacterSprite()
   if err != nil {
     log.Fatal(err)
   }
 
-  // last := time.Now()
-  for !win.Closed() {
-    // dt := time.Since(last).Seconds()
-    // last = time.Now()
+  // Set up camera
+  camPos := pixel.ZV
 
-    characterSprite.Draw(win, pixel.IM.Moved(win.Bounds().Center()))
+  last := time.Now()
+  for !win.Closed() {
+    // Clear previously drawn images
+    win.Clear(backgroundColour)
+
+    // Draw the character centre screen, move it with the camera position
+    characterSprite.Draw(win, pixel.IM.Moved(camPos))
+
+    dt := time.Since(last).Seconds()
+    last = time.Now()
+
+    // Move the camera
+    if win.Pressed(pixelgl.KeyA) || win.Pressed(pixelgl.KeyLeft) {
+      camPos.X -= camSpeed * dt
+    }
+    if win.Pressed(pixelgl.KeyD) || win.Pressed(pixelgl.KeyRight) {
+      camPos.X += camSpeed * dt
+    }
+    if win.Pressed(pixelgl.KeyS) || win.Pressed(pixelgl.KeyDown) {
+      camPos.Y -= camSpeed * dt
+    }
+    if win.Pressed(pixelgl.KeyW) || win.Pressed(pixelgl.KeyUp) {
+      camPos.Y += camSpeed * dt
+    }
+
+    // Set the cam as the viewpoint
+    cam := pixel.IM.Moved(win.Bounds().Center().Sub(camPos))
+    win.SetMatrix(cam)
 
     win.Update()
   }
