@@ -16,6 +16,7 @@ const (
   winWidth float64  = 1024
   winHeight float64 = 768
   camSpeed float64  = 500.0
+  charScale float64 = 0.5
 )
 
 var (
@@ -51,7 +52,7 @@ func run() {
     win.Clear(backgroundColour)
 
     // Draw the character centre screen, move it with the camera position
-    characterSprite.Draw(win, pixel.IM.Moved(camPos))
+    characterSprite.Draw(win, pixel.IM.Moved(camPos).Scaled(camPos, charScale))
 
     dt := time.Since(last).Seconds()
     last = time.Now()
