@@ -16,18 +16,6 @@ const (
   treeplacementFile string = "assets/treeplacement.csv"
 )
 
-// func (f *Scene) Update(win *pixelgl.Window, camPos *pixel.Vec, char *mob.CharacterMob, dt float64, allSprites map[string]*pixel.Sprite) {
-//   allSprites["house"].Draw(win, pixel.IM.Moved(pixel.V(0, 384)))
-//   f.collidableBatch.Draw(win)
-//
-//   char.Update(win, *camPos)
-//
-//   newCamPos := util.MoveCamera(win, camPos, dt)
-//   if !char.Collides(f.collidableObjs, newCamPos) {
-//     (*camPos) = newCamPos
-//   }
-// }
-
 func CreateFarm(changeScene *chan string, allSprites map[string]*pixel.Sprite, spritePic pixel.Picture) *Scene {
   // Load tree positions
   trees := []*util.StaticObject{}
