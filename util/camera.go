@@ -9,17 +9,22 @@ const (
   CamSpeed float64  = 500.0
 )
 
-func MoveCamera(win *pixelgl.Window, camPos *pixel.Vec, dt float64) {
+// Returns potential new position for camera
+// Caller must move it after checking collisions
+func MoveCamera(win *pixelgl.Window, camPos *pixel.Vec, dt float64) pixel.Vec {
+  retV := (*camPos)
   if win.Pressed(pixelgl.KeyA) || win.Pressed(pixelgl.KeyLeft) {
-    (*camPos).X -= CamSpeed * dt
+     retV.X -= CamSpeed * dt
   }
   if win.Pressed(pixelgl.KeyD) || win.Pressed(pixelgl.KeyRight) {
-    (*camPos).X += CamSpeed * dt
+    retV.X += CamSpeed * dt
   }
   if win.Pressed(pixelgl.KeyS) || win.Pressed(pixelgl.KeyDown) {
-    (*camPos).Y -= CamSpeed * dt
+    retV.Y -= CamSpeed * dt
   }
   if win.Pressed(pixelgl.KeyW) || win.Pressed(pixelgl.KeyUp) {
-    (*camPos).Y += CamSpeed * dt
+    retV.Y += CamSpeed * dt
   }
+
+  return retV
 }

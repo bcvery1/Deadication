@@ -24,9 +24,11 @@ type FarmScene struct {
 
 func (f *FarmScene) Update(win *pixelgl.Window, camPos *pixel.Vec, char *mob.CharacterMob, dt float64) {
   f.houseImg.Draw(win, pixel.IM.Moved(pixel.V(0, 384)))
-  if !char.Collides(f.treeObjs, *camPos) {
-    char.Update(win, *camPos)
-    util.MoveCamera(win, camPos, dt)
+
+  char.Update(win, *camPos)
+  newCamPos := util.MoveCamera(win, camPos, dt)
+  if !char.Collides(f.treeObjs, newCamPos) {
+    (*camPos) = newCamPos
   }
 }
 

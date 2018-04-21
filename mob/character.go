@@ -30,13 +30,13 @@ func rectCollide(r1, r2 pixel.Rect) bool {
 
 func (c *CharacterMob) Collides(statics []*util.StaticObject, camPos pixel.Vec) bool {
   for _, obj := range statics {
-    // log.Println(c.Sprites[c.State].Frame().Moved(camPos))
-    // log.Println(obj.Sprite.Frame())
     playRect := c.Sprites[c.State].Frame().Moved(camPos)
     objRect := obj.Sprite.Frame()
-    log.Println(rectCollide(playRect, objRect))
     if !obj.Collision {
       continue
+    }
+    if rectCollide(playRect, objRect) {
+      return true
     }
   }
 
