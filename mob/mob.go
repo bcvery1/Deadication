@@ -14,9 +14,17 @@ const (
 
 type IMob interface {
   Update(*pixelgl.Window, pixel.Vec)
+  SetState(int)
 }
 
 type Mob struct {
-  Sprites []pixel.Sprite
+  // Maps state ID to annimation sequence
+  // BUG(Currently only mapping to one sprite)
+  Sprites map[int]*pixel.Sprite
   State int
+  PosMat pixel.Matrix
+}
+
+func (m Mob) Update(win *pixelgl.Window, camPos pixel.Vec) {
+  m.Sprites[m.State].Draw(win, m.PosMat)
 }
