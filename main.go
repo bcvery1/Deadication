@@ -6,6 +6,7 @@ import (
 
   "Deadication/hud"
   "Deadication/mob"
+  "Deadication/scenes"
 
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
@@ -21,6 +22,7 @@ const (
 
 var (
   backgroundColour = colornames.Forestgreen
+  sceneChange chan string = make(chan string, 1)
 )
 
 // Main function pixel will run
@@ -43,6 +45,14 @@ func run() {
     log.Fatal(err)
   }
 
+  // Get the scenes
+  menuScene := scenes.GetScene("menu", &sceneChange)
+  homeScene := scenes.GetScene("home", &sceneChange)
+  farmScene := scenes.GetScene("farm", &sceneChange)
+  inventory := scenes.GetScene("inventory", &sceneChange)
+  // Set active scene to the menu
+  activeScene := "menu"
+
   // Set up camera
   camPos := pixel.ZV
 
@@ -50,6 +60,24 @@ func run() {
   for !win.Closed() {
     // Clear previously drawn images
     win.Clear(backgroundColour)
+    select {
+    case activeScene = <- sceneChange:
+      log.Printf("New scene %s", activeScene)
+    default:
+    }
+    // Update the active scene
+    switch activeScene {
+    case "menu":
+      menuScene.Update(win)
+    case "home":
+      homeScene.Update(win)
+    case "farm":
+      farmScene.Update(win)
+    case "inventory":
+      inventory.Update(win)
+    default:
+      log.Fatalf("Unknown scene %s", activeScene)
+    }
 
     // Draw HUD to screen
     hud.Draw(win, camPos)
