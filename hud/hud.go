@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/bcvery1/Deadication/player"
+	"github.com/bcvery1/Deadication/util"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -80,7 +81,7 @@ func (h *HUD) getMoney(p *player.Player) (*text.Text, pixel.Matrix) {
 	txt := text.New(pixel.V(480, 700), h.atlas)
 	txt.Color = textColor
 
-	fmt.Fprintf(txt, "Money: %dgp", p.Money())
+	fmt.Fprintf(txt, "Money: %dgp", util.Money)
 	return txt, scaleHUDText(txt)
 }
 
