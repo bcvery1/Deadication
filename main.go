@@ -47,6 +47,10 @@ func run() {
 	batch, collisions := util.CreateBatch(sprites, pic)
 	interactives, zones := util.AllInteractives()
 
+	// Add two initial humans
+	util.Pens[2].AddHuman(sprites)
+	util.Pens[2].AddHuman(sprites)
+
 	// Start listening for popups
 	util.InitPopups()
 
@@ -81,6 +85,11 @@ func run() {
 			for _, zone := range interactives {
 				zone.Deactivate()
 			}
+		}
+
+		// Update human movements
+		for _, p := range util.Pens {
+			p.UpdateHumans(win, dt)
 		}
 
 		// Update the HUD

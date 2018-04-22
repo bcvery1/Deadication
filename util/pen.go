@@ -9,7 +9,20 @@ import (
 
 type pen struct {
 	Interactive
-	humans []*human
+	humans []*Human
+	rect   pixel.Rect
+}
+
+// AddHuman generates and adds a human to this pen
+func (p *pen) AddHuman(sprites map[string]*pixel.Sprite) {
+	h := NewHuman(p, sprites)
+	p.humans = append(p.humans, h)
+}
+
+func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64) {
+	for _, h := range p.humans {
+		h.Update(p, win, dt)
+	}
 }
 
 func (p *pen) Update(win *pixelgl.Window, carrying string) {

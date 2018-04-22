@@ -50,16 +50,21 @@ var river = riverInter{
 
 var pen1 = pen{
 	Interactive: Interactive{"Top pen", false},
-	humans:      []*human{},
+	humans:      []*Human{},
 }
 var pen2 = pen{
 	Interactive: Interactive{"Mid pen", false},
-	humans:      []*human{},
+	humans:      []*Human{},
 }
 var pen3 = pen{
 	Interactive: Interactive{"Bottom pen", false},
-	humans:      []*human{&human{}, &human{}},
+	humans:      []*Human{},
 }
+
+var (
+	// Pens shares the pens to the gameloop
+	Pens = []*pen{&pen1, &pen2, &pen3}
+)
 
 type option struct {
 	text string
@@ -193,6 +198,15 @@ func AllInteractives() (map[string]InteractiveI, map[pixel.Rect]string) {
 		interName := i[4]
 		rect := pixel.R(xMin, yMin, xMax, yMax)
 		r[rect] = interName
+
+		// Set the pen rects
+		if interName == "pen1" {
+			pen1.rect = rect
+		} else if interName == "pen2" {
+			pen2.rect = rect
+		} else if interName == "pen3" {
+			pen3.rect = rect
+		}
 	}
 
 	m := make(map[string]InteractiveI)
