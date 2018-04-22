@@ -13,10 +13,38 @@ type pen struct {
 	rect   pixel.Rect
 }
 
+// InitPens listens for the player eating humans
+func InitPens() {
+	go func() {
+		for {
+			penName := <-EatFromChan
+			Pens[penName].EatHuman()
+
+			// Check if any humans left
+			humansLeft := false
+			for _, p := range Pens {
+				if len(p.humans) > 0 {
+					humansLeft = true
+				}
+			}
+
+			if !humansLeft {
+				// No humans left in game
+				PopupChan <- &Popup{"You have no humans left!\nWho needs food anyway..."}
+			}
+		}
+	}()
+}
+
 // AddHuman generates and adds a human to this pen
 func (p *pen) AddHuman(sprites map[string]*pixel.Sprite) {
 	h := NewHuman(p, sprites)
 	p.humans = append(p.humans, h)
+}
+
+// EatHuman removes a human from this pen
+func (p *pen) EatHuman() {
+	p.humans = p.humans[1:]
 }
 
 func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64) {
@@ -107,4 +135,5 @@ type eatBrain struct {
 func (e *eatBrain) Action(p InteractiveI, carrying string) {
 	PopupChan <- &Popup{"You ate some brains!  Yum!"}
 	EatChan <- 50
+	EatFromChan <- p.Title()
 }

@@ -48,11 +48,13 @@ func run() {
 	interactives, zones := util.AllInteractives()
 
 	// Add two initial humans
-	util.Pens[2].AddHuman(sprites)
-	util.Pens[2].AddHuman(sprites)
+	util.Pens["Bottom pen"].AddHuman(sprites)
+	util.Pens["Bottom pen"].AddHuman(sprites)
 
 	// Start listening for popups
 	util.InitPopups()
+	// Start listening for eatings
+	util.InitPens()
 
 	last := time.Now()
 	inZone := ""

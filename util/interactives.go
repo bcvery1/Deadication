@@ -63,7 +63,11 @@ var pen3 = pen{
 
 var (
 	// Pens shares the pens to the gameloop
-	Pens = []*pen{&pen1, &pen2, &pen3}
+	Pens = map[string]*pen{
+		"Top pen":    &pen1,
+		"Mid pen":    &pen2,
+		"Bottom pen": &pen3,
+	}
 )
 
 type option struct {

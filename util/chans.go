@@ -8,3 +8,6 @@ var EatChan = make(chan int, 1)
 
 // PopupChan - Displays messages to screen
 var PopupChan = make(chan *Popup, 1)
+
+// EatFromChan - Takes the name of a pen and removes a human from it
+var EatFromChan = make(chan string, 1)
