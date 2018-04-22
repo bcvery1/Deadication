@@ -47,9 +47,12 @@ func run() {
 	batch, collisions := util.CreateBatch(sprites, pic)
 	interactives, zones := util.AllInteractives()
 
+	// Assign to global var
+	util.AllSprites = sprites
+
 	// Add two initial humans
-	util.Pens["Bottom pen"].AddHuman(sprites)
-	util.Pens["Bottom pen"].AddHuman(sprites)
+	util.Pens["Bottom pen"].AddHuman()
+	util.Pens["Bottom pen"].AddHuman()
 
 	// Add initial corn to top field
 	util.Fields["Top field"].Plant(util.NewCrop("corn"))
@@ -102,7 +105,7 @@ func run() {
 
 		// Update human movements
 		for _, p := range util.Pens {
-			p.UpdateHumans(win, dt, sprites)
+			p.UpdateHumans(win, dt)
 		}
 
 		// Update the HUD

@@ -37,8 +37,8 @@ func InitPens() {
 }
 
 // AddHuman generates and adds a human to this pen
-func (p *pen) AddHuman(sprites map[string]*pixel.Sprite) {
-	h := NewHuman(p, sprites)
+func (p *pen) AddHuman() {
+	h := NewHuman(p, AllSprites)
 	p.humans = append(p.humans, h)
 }
 
@@ -47,7 +47,7 @@ func (p *pen) EatHuman() {
 	p.humans = p.humans[1:]
 }
 
-func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64, sprites map[string]*pixel.Sprite) {
+func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64) {
 	for _, h := range p.humans {
 		h.Update(p, win, dt)
 	}
@@ -57,7 +57,7 @@ func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64, sprites map[string]*
 		if myRand.Intn(2000) == 2000 {
 			s := fmt.Sprintf("Humans in %s have made a baby", p.Title())
 			PopupChan <- &Popup{s}
-			p.AddHuman(sprites)
+			p.AddHuman()
 		}
 	}
 }
@@ -106,7 +106,37 @@ func (p *pen) opts(c string) []optionI {
 		opts = append(opts, &o)
 	}
 
+	if len(p.humans) > 0 && c == "" {
+		o := collectHuman{option{"Pickup human"}, p}
+		opts = append(opts, &o)
+	}
+
+	if c == "human" {
+		o := dropoffHuman{option{"Deposit human"}, p}
+		opts = append(opts, &o)
+	}
+
 	return opts
+}
+
+type dropoffHuman struct {
+	option
+	p *pen
+}
+
+func (dh *dropoffHuman) Action(p InteractiveI, carry string) {
+	PickupChan <- ""
+	dh.p.AddHuman()
+}
+
+type collectHuman struct {
+	option
+	p *pen
+}
+
+func (ch *collectHuman) Action(p InteractiveI, carrying string) {
+	PickupChan <- "human"
+	ch.p.humans = ch.p.humans[1:]
 }
 
 type observePen struct {

@@ -22,6 +22,11 @@ const (
 	assetPlacementPath string = "assets/assetplacement.csv"
 )
 
+var (
+	// AllSprites map of sprites
+	AllSprites map[string]*pixel.Sprite
+)
+
 func loadPic(path string) pixel.Picture {
 	f, err := os.Open(path)
 	if err != nil {
