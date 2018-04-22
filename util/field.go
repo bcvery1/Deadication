@@ -9,9 +9,12 @@ import (
 )
 
 const (
-	cottonseed = "cottonseed"
-	appleseed  = "appleseed"
-	cornseed   = "cornseed"
+	cottonseed      = "cottonseed"
+	cottonseedPrice = 3
+	appleseed       = "appleseed"
+	appleseedPrice  = 6
+	cornseed        = "cornseed"
+	cornseedPrice   = 4
 )
 
 type field struct {
