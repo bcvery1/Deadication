@@ -27,21 +27,21 @@ var (
 
 var field1 = field{
 	Interactive: Interactive{"Top field", false},
-	havestPerc:  0,
 	crop:        NewCrop(""),
-	planted:     false,
+	planted:     true,
+	amountLeft:  0,
 }
 var field2 = field{
 	Interactive: Interactive{"Mid field", false},
-	havestPerc:  0,
 	crop:        NewCrop(""),
 	planted:     false,
+	amountLeft:  0,
 }
 var field3 = field{
 	Interactive: Interactive{"Bottom field", false},
-	havestPerc:  0,
 	crop:        NewCrop(""),
 	planted:     false,
+	amountLeft:  0,
 }
 
 var river = riverInter{
@@ -61,12 +61,20 @@ var pen3 = pen{
 	humans:      []*Human{},
 }
 
+var house = NewHouse()
+
 var (
 	// Pens shares the pens to the gameloop
 	Pens = map[string]*pen{
 		"Top pen":    &pen1,
 		"Mid pen":    &pen2,
 		"Bottom pen": &pen3,
+	}
+	// Fields shares the fields to the gameloop
+	Fields = map[string]*field{
+		"Top field":    &field1,
+		"Mid field":    &field2,
+		"Bottom field": &field3,
 	}
 )
 
@@ -211,6 +219,14 @@ func AllInteractives() (map[string]InteractiveI, map[pixel.Rect]string) {
 		} else if interName == "pen3" {
 			pen3.rect = rect
 		}
+		// Set the field rects
+		if interName == "field1" {
+			field1.rect = rect
+		} else if interName == "field2" {
+			field2.rect = rect
+		} else if interName == "field3" {
+			field3.rect = rect
+		}
 	}
 
 	m := make(map[string]InteractiveI)
@@ -221,6 +237,7 @@ func AllInteractives() (map[string]InteractiveI, map[pixel.Rect]string) {
 	m["pen2"] = &pen2
 	m["pen3"] = &pen3
 	m["river"] = &river
+	m["house"] = house
 
 	return m, r
 }

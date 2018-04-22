@@ -51,10 +51,16 @@ func run() {
 	util.Pens["Bottom pen"].AddHuman(sprites)
 	util.Pens["Bottom pen"].AddHuman(sprites)
 
+	// Add initial corn to top field
+	util.Fields["Top field"].Plant(util.NewCrop("corn"))
+	util.Fields["Mid field"].Plant(util.NewCrop("apple"))
+
 	// Start listening for popups
 	util.InitPopups()
 	// Start listening for eatings
 	util.InitPens()
+	// Start listening for harvests
+	util.InitFields()
 
 	last := time.Now()
 	inZone := ""
@@ -69,6 +75,11 @@ func run() {
 		last = time.Now()
 
 		batch.Draw(win)
+
+		// Update crop growth via fields
+		for _, f := range util.Fields {
+			f.UpdateCrop(win, sprites)
+		}
 
 		newZone := playerObj.Update(win, dt, collisions, zones)
 		if newZone != "" {

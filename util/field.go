@@ -2,17 +2,87 @@ package util
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
 
+const (
+	cottonseed = "cottonseed"
+	appleseed  = "appleseed"
+	cornseed   = "cornseed"
+)
+
 type field struct {
 	Interactive
-	havestPerc int
 	crop       *Crop
 	planted    bool
 	amountLeft int
+	rect       pixel.Rect
+}
+
+// PlantAction action to plant a crop in a field
+type PlantAction struct {
+	field string
+	crop  *Crop
+}
+
+// InitFields loops and listens for harvests
+func InitFields() {
+	go func() {
+		for {
+			select {
+			case fieldName := <-HarvestChan:
+				Fields[fieldName].harvest()
+			case plantAction := <-PlantChan:
+				Fields[plantAction.field].Plant(plantAction.crop)
+			}
+		}
+	}()
+}
+
+func (f *field) harvest() {
+	// Decrement amount of crops left
+	f.amountLeft--
+	log.Println(f.amountLeft)
+
+	if f.amountLeft == 0 {
+		log.Println(f.planted)
+		// If the plant reverts, field is still planted
+		f.planted = f.crop.Revert()
+		log.Println(f.planted)
+	}
+}
+
+// UpdateCrop draws the crop to the screen
+func (f *field) UpdateCrop(win *pixelgl.Window, allSprites map[string]*pixel.Sprite) {
+	if !f.planted {
+		return
+	}
+
+	// Get the sprite from allSprites
+	spriteName := fmt.Sprintf(f.crop.spriteFmt, f.crop.stage)
+	cropSprite, ok := allSprites[spriteName]
+	if !ok {
+		log.Println("Cannot find sprite")
+		return
+	}
+
+	// Draw to each square
+	for x := f.rect.Min.X; x < f.rect.Max.X; x += spriteMapWidth {
+		for y := f.rect.Min.Y; y < f.rect.Max.Y; y += spriteMapWidth {
+			posV := pixel.V(x+(spriteMapWidth/2.0), y+(spriteMapWidth/2.0))
+			cropSprite.Draw(win, pixel.IM.Moved(posV))
+		}
+	}
+}
+
+// Plant adds a crop to this field
+func (f *field) Plant(c *Crop) {
+	f.planted = true
+	f.crop = c
+	f.amountLeft = c.harvestAmount
 }
 
 func (f *field) Update(win *pixelgl.Window, carrying string) {
@@ -49,12 +119,12 @@ func (f *field) opts(c string) []optionI {
 		opts = append(opts, &o)
 	}
 
-	if c == "seed" && !f.planted {
-		o := plantSeeds{option{"Plant seeds"}}
+	if (c == cottonseed || c == appleseed || c == cornseed) && !f.planted {
+		o := plantSeeds{option{"Plant seeds"}, c}
 		opts = append(opts, &o)
 	}
 
-	if f.havestPerc == 100 {
+	if f.crop.IsReady() && f.planted {
 		s := fmt.Sprintf("Havest (%d left)", f.amountLeft)
 		o := havest{option{s}}
 		opts = append(opts, &o)
@@ -85,12 +155,17 @@ func (w *waterField) Action(f InteractiveI, carrying string) {
 
 type plantSeeds struct {
 	option
+	seed string
 }
 
 func (p *plantSeeds) Action(f InteractiveI, carrying string) {
-	s := fmt.Sprintf("You planted %s in %s.\nbMake sure you water it each month", p.Text(), f.Title())
+	s := fmt.Sprintf("You planted %s in %s.\nMake sure you water it each month", p.seed, f.Title())
 	PopupChan <- &Popup{s}
 	PickupChan <- ""
+	PlantChan <- PlantAction{
+		f.Title(),
+		NewCrop(p.seed),
+	}
 }
 
 type havest struct {
@@ -100,4 +175,5 @@ type havest struct {
 func (h *havest) Action(f InteractiveI, carrying string) {
 	PopupChan <- &Popup{"You picked up revolting human food.\nThere isn't even any mold on this!"}
 	PickupChan <- "food"
+	HarvestChan <- f.Title()
 }
