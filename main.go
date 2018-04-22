@@ -21,6 +21,11 @@ const (
 
 var (
 	backgroundColour = colornames.Forestgreen
+
+	x1 = 0
+	x2 = 0
+	y1 = 0
+	y2 = 0
 )
 
 func run() {
