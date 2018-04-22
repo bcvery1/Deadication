@@ -1,6 +1,10 @@
 package util
 
-import "log"
+import (
+	"log"
+
+	"github.com/faiface/pixel/pixelgl"
+)
 
 type crop struct {
 	name        string
@@ -14,7 +18,12 @@ type field struct {
 	planted    bool
 }
 
-func (f *field) Activate(carrying string) {
+func (f *field) IsActive() bool {
+	return f.Interactive.IsActive()
+}
+
+func (f *field) Activate(carrying string, win *pixelgl.Window) {
+	f.Interactive.Activate(carrying, win)
 	log.Printf("Field activate %s", carrying)
 	f.opts(carrying)
 }
