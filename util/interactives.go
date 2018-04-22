@@ -1,12 +1,14 @@
 package util
 
 import (
+	"bytes"
 	"encoding/csv"
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"strconv"
+
+	"github.com/bcvery1/Deadication/bindata"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -190,13 +192,12 @@ func (i *Interactive) Deactivate() {
 // AllInteractives gets all interactive entities and collision areas
 func AllInteractives() (map[string]InteractiveI, map[pixel.Rect]string) {
 	r := make(map[pixel.Rect]string)
-	interactiveF, err := os.Open(interactivePlacementPath)
+	interactiveF, err := bindata.Asset(interactivePlacementPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer interactiveF.Close()
 
-	csvFile := csv.NewReader(interactiveF)
+	csvFile := csv.NewReader(bytes.NewReader(interactiveF))
 	for {
 		i, err := csvFile.Read()
 		if err == io.EOF {

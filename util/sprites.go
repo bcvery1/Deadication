@@ -1,12 +1,14 @@
 package util
 
 import (
+	"bytes"
 	"encoding/csv"
 	"image"
 	"io"
 	"log"
-	"os"
 	"strconv"
+
+	"github.com/bcvery1/Deadication/bindata"
 
 	// Required for png decoding
 	_ "image/png"
@@ -28,13 +30,12 @@ var (
 )
 
 func loadPic(path string) pixel.Picture {
-	f, err := os.Open(path)
+	f, err := bindata.Asset(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer f.Close()
 
-	img, _, err := image.Decode(f)
+	img, _, err := image.Decode(bytes.NewReader(f))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,13 +47,12 @@ func loadPic(path string) pixel.Picture {
 func GetSprites() (map[string]*pixel.Sprite, pixel.Picture) {
 	pic := loadPic(spriteMapPath)
 
-	spriteF, err := os.Open(spriteMapCSV)
+	spriteF, err := bindata.Asset(spriteMapCSV)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer spriteF.Close()
 
-	csvFile := csv.NewReader(spriteF)
+	csvFile := csv.NewReader(bytes.NewReader(spriteF))
 	spriteMap := make(map[string]*pixel.Sprite)
 	for {
 		spr, err := csvFile.Read()
@@ -89,13 +89,12 @@ func CreateBatch(sprites map[string]*pixel.Sprite, pic pixel.Picture) (*pixel.Ba
 
 	DrawRiver(batch)
 
-	assetsF, err := os.Open(assetPlacementPath)
+	assetsF, err := bindata.Asset(assetPlacementPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer assetsF.Close()
 
-	csvFile := csv.NewReader(assetsF)
+	csvFile := csv.NewReader(bytes.NewReader(assetsF))
 	for {
 		asset, err := csvFile.Read()
 		if err == io.EOF {
