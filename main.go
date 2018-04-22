@@ -1,64 +1,64 @@
 package main
 
 import (
-  "log"
-  "image/color"
-  "time"
+	"log"
+	"time"
 
-  "Deadication/player"
-  "Deadication/util"
+	"Deadication/player"
+	"Deadication/util"
 
-  "github.com/faiface/pixel"
-  "github.com/faiface/pixel/pixelgl"
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 
-  "golang.org/x/image/colornames"
+	"golang.org/x/image/colornames"
 )
 
 const (
-  winWidth  float64 = 1280
-  winHeight float64 = 720
+	winWidth  float64 = 1280
+	winHeight float64 = 720
 )
 
 var (
-  backgroundColour color.RGBA = colornames.Forestgreen
+	backgroundColour = colornames.Forestgreen
+	interacitves     = make(map[string]*util.Interactive)
 )
 
 func run() {
-  cfg := pixelgl.WindowConfig{
-    Title:  "DEADication",
-    Bounds: pixel.R(0, 0, winWidth, winHeight),
-    VSync:  true,
-  }
-  win, err := pixelgl.NewWindow(cfg)
-  if err != nil {
-    log.Fatal(err)
-  }
-  win.SetSmooth(true)
-  win.Clear(backgroundColour)
+	cfg := pixelgl.WindowConfig{
+		Title:  "DEADication",
+		Bounds: pixel.R(0, 0, winWidth, winHeight),
+		VSync:  true,
+	}
+	win, err := pixelgl.NewWindow(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	win.SetSmooth(true)
+	win.Clear(backgroundColour)
 
-  sprites, pic := util.GetSprites()
-  playerObj := player.NewPlayer(sprites)
-  batch, collisions := util.CreateBatch(sprites, pic)
+	sprites, pic := util.GetSprites()
+	playerObj := player.NewPlayer(sprites)
+	batch, collisions := util.CreateBatch(sprites, pic)
 
-  last := time.Now()
-  for !win.Closed() {
-    win.Clear(backgroundColour)
+	last := time.Now()
+	for !win.Closed() {
+		win.Clear(backgroundColour)
 
-    if win.JustPressed(pixelgl.MouseButtonLeft) {
-      log.Println(win.MousePosition())
-    }
+		if win.JustPressed(pixelgl.MouseButtonLeft) {
+			log.Println(win.MousePosition())
+		}
 
-    dt := time.Since(last).Seconds()
-    last = time.Now()
-    
-    batch.Draw(win)
+		dt := time.Since(last).Seconds()
+		last = time.Now()
 
-    playerObj.Update(win, dt, collisions)
+		batch.Draw(win)
 
-    win.Update()
-  }
+		playerObj.Update(win, dt, collisions)
+
+		win.Update()
+	}
 }
 
 func main() {
-  pixelgl.Run(run)
+	pixelgl.Run(run)
 }
