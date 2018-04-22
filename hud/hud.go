@@ -98,7 +98,7 @@ func (h *HUD) updateDate() {
 		<-time.After(time.Second * daySeconds)
 		if h.day == 30 {
 			h.day = 1
-			if h.month == 12 {
+			if h.month == 11 {
 				h.month = 0
 			} else {
 				h.month++
