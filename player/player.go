@@ -23,6 +23,7 @@ type Player struct {
 	pos           pixel.Vec
 	health        int
 	hunger        int
+	carrying      string
 }
 
 func (p *Player) rect(dt float64) pixel.Rect {
@@ -38,6 +39,17 @@ func (p *Player) Health() int {
 // Hunger returns the players current health
 func (p *Player) Hunger() int {
 	return p.hunger
+}
+
+// Carry causes the player to begin carrying the item
+// If already carrying something, it is 'deleted'
+func (p *Player) Carry(item string) {
+	p.carrying = item
+}
+
+// Carrying returns what the player is currently carrying
+func (p *Player) Carrying() string {
+	return p.carrying
 }
 
 func (p *Player) statUpdate() {
@@ -61,6 +73,7 @@ func NewPlayer(all map[string]*pixel.Sprite) *Player {
 		pixel.V(120, 120),
 		100,
 		100,
+		"",
 	}
 
 	go p.statUpdate()
