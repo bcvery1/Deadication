@@ -64,7 +64,7 @@ type Interactive struct {
 // InteractiveI interface for any Interactive element
 type InteractiveI interface {
 	opts(string) []optionI
-	Activate(string, *pixelgl.Window)
+	Activate(string)
 	Deactivate()
 	Title() string
 	IsActive() bool
@@ -136,7 +136,7 @@ func (i *Interactive) opts(c string) []optionI {
 
 // Activate the structs function
 // Takes what the player is currently carrying
-func (i *Interactive) Activate(carrying string, win *pixelgl.Window) {
+func (i *Interactive) Activate(carrying string) {
 	i.active = true
 }
 

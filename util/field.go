@@ -1,8 +1,6 @@
 package util
 
 import (
-	"log"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -48,9 +46,8 @@ func (f *field) Update(win *pixelgl.Window, carrying string) {
 	doOptions(win, fieldoptions, carrying, f)
 }
 
-func (f *field) Activate(carrying string, win *pixelgl.Window) {
+func (f *field) Activate(carrying string) {
 	f.Interactive.active = true
-	log.Printf("Field activate %s", carrying)
 	f.opts(carrying)
 }
 
