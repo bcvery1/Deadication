@@ -43,17 +43,24 @@ func (p *Player) CurrentSprite(dt float64) *pixel.Sprite {
 // Collides returns whether the player collids with any rect in the slice provided
 func (p *Player) Collides(dt float64, collisions []pixel.Rect) bool {
 	for _, r := range collisions {
-		if util.RectCollide(util.TranslateRect(p.CurrentSprite(dt), p.pos), r) {
+		if p.CollidesWith(dt, r) {
 			return true
 		}
 	}
 	return false
 }
 
+// CollidesWith checks if the player collides with a specific rect
+func (p *Player) CollidesWith(dt float64, rect pixel.Rect) bool {
+	return util.RectCollide(util.TranslateRect(p.CurrentSprite(dt), p.pos), rect)
+}
+
 // Update draws the player in a new position on the page
-func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect) {
+// Returns if it is within a zone
+func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect, zones map[pixel.Rect]string) string {
 	p.CurrentSprite(dt).Draw(win, pixel.IM.Scaled(p.pos, playerScale).Moved(p.pos))
 
+	// Try move right
 	if win.Pressed(pixelgl.KeyA) || win.Pressed(pixelgl.KeyLeft) {
 		p.pos.X -= playerSpeed * dt
 		if p.Collides(dt, collisions) {
@@ -63,6 +70,7 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 			p.pos.X = 0.0
 		}
 	}
+	// Try move left
 	if win.Pressed(pixelgl.KeyD) || win.Pressed(pixelgl.KeyRight) {
 		p.pos.X += playerSpeed * dt
 		if p.pos.X > win.Bounds().Max.X {
@@ -72,6 +80,7 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 			p.pos.X -= playerSpeed * dt
 		}
 	}
+	// Try move down
 	if win.Pressed(pixelgl.KeyS) || win.Pressed(pixelgl.KeyDown) {
 		p.pos.Y -= playerSpeed * dt
 		if p.pos.Y < 0.0 {
@@ -81,6 +90,7 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 			p.pos.Y += playerSpeed * dt
 		}
 	}
+	// Try move up
 	if win.Pressed(pixelgl.KeyW) || win.Pressed(pixelgl.KeyUp) {
 		p.pos.Y += playerSpeed * dt
 		if p.pos.Y > win.Bounds().Max.Y {
@@ -90,4 +100,12 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 			p.pos.Y -= playerSpeed * dt
 		}
 	}
+
+	// Check if player is within a zone
+	for r, z := range zones {
+		if p.CollidesWith(dt, r) {
+			return z
+		}
+	}
+	return ""
 }

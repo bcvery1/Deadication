@@ -20,7 +20,6 @@ const (
 
 var (
 	backgroundColour = colornames.Forestgreen
-	interacitves     = make(map[string]*util.Interactive)
 )
 
 func run() {
@@ -39,8 +38,10 @@ func run() {
 	sprites, pic := util.GetSprites()
 	playerObj := player.NewPlayer(sprites)
 	batch, collisions := util.CreateBatch(sprites, pic)
+	interactives, zones := util.AllInteractives()
 
 	last := time.Now()
+	inZone := ""
 	for !win.Closed() {
 		win.Clear(backgroundColour)
 
@@ -53,7 +54,23 @@ func run() {
 
 		batch.Draw(win)
 
-		playerObj.Update(win, dt, collisions)
+		newZone := playerObj.Update(win, dt, collisions, zones)
+		if newZone != "" {
+			// Player is in a named interactive zone
+			// Only activate if changed zones
+			if newZone != inZone {
+				interactives[newZone].Activate()
+				// Set inZone
+				inZone = newZone
+			}
+		} else {
+			// Reset inZone
+			inZone = ""
+			// Deactivate all zones
+			for _, zone := range interactives {
+				zone.Deactivate()
+			}
+		}
 
 		win.Update()
 	}
