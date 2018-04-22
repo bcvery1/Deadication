@@ -26,11 +26,17 @@ type Player struct {
 	health        int
 	hunger        int
 	carrying      string
+	money         int
 }
 
 func (p *Player) rect(dt float64) pixel.Rect {
 	s := p.CurrentSprite(dt)
 	return util.TranslateRect(s, p.pos)
+}
+
+// Money returns the players current money
+func (p *Player) Money() int {
+	return (*p).money
 }
 
 // Health returns the players current health
@@ -105,6 +111,7 @@ func NewPlayer(all map[string]*pixel.Sprite) *Player {
 		100,
 		100,
 		"",
+		10,
 	}
 
 	go (&p).statUpdate()
