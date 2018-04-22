@@ -73,6 +73,7 @@ type feedHumans struct {
 
 func (f *feedHumans) Action(p InteractiveI, carrying string) {
 	log.Println("Feeding humans")
+	PickupChan <- ""
 }
 
 type clotheHumans struct {
@@ -81,6 +82,7 @@ type clotheHumans struct {
 
 func (c *clotheHumans) Action(p InteractiveI, carrying string) {
 	log.Println("Clothing humans")
+	PickupChan <- ""
 }
 
 type eatBrain struct {
@@ -89,4 +91,5 @@ type eatBrain struct {
 
 func (e *eatBrain) Action(p InteractiveI, carrying string) {
 	log.Println("Ate a humans brain")
+	EatChan <- 50
 }

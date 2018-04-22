@@ -52,6 +52,13 @@ func (p *Player) Carrying() string {
 	return p.carrying
 }
 
+func (p *Player) eat(points int) {
+	p.health += points
+	if p.Health() > 100 {
+		p.health = 100
+	}
+}
+
 func (p *Player) statUpdate() {
 	for {
 		<-time.After(time.Second * hungerAfter)
@@ -59,6 +66,17 @@ func (p *Player) statUpdate() {
 		if p.hunger < 1 {
 			p.hunger = 1
 			p.health -= starveHurt
+		}
+	}
+}
+
+func (p *Player) listenChans() {
+	for {
+		select {
+		case newItem := <-util.PickupChan:
+			p.Carry(newItem)
+		case health := <-util.EatChan:
+			p.eat(health)
 		}
 	}
 }
@@ -77,6 +95,7 @@ func NewPlayer(all map[string]*pixel.Sprite) *Player {
 	}
 
 	go p.statUpdate()
+	go p.listenChans()
 
 	return &p
 }

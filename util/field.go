@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/faiface/pixel"
@@ -17,6 +18,7 @@ type field struct {
 	havestPerc int
 	crop       crop
 	planted    bool
+	amountLeft int
 }
 
 func (f *field) Update(win *pixelgl.Window, carrying string) {
@@ -58,6 +60,12 @@ func (f *field) opts(c string) []optionI {
 		opts = append(opts, &o)
 	}
 
+	if f.havestPerc == 100 {
+		s := fmt.Sprintf("Havest (%d left)", f.amountLeft)
+		o := havest{option{s}}
+		opts = append(opts, &o)
+	}
+
 	return opts
 }
 
@@ -76,9 +84,22 @@ type waterField struct {
 func (w *waterField) Action(f InteractiveI, carrying string) {
 	if carrying == "water" {
 		log.Println("Watering field")
+		PickupChan <- ""
 	}
 }
 
 type plantSeeds struct {
 	option
+}
+
+func (p *plantSeeds) Action(f InteractiveI, carrying string) {
+	PickupChan <- ""
+}
+
+type havest struct {
+	option
+}
+
+func (h *havest) Action(f InteractiveI, carrying string) {
+	PickupChan <- "food"
 }

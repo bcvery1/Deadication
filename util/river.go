@@ -83,5 +83,6 @@ type collectWater struct {
 func (c *collectWater) Action(f InteractiveI, carrying string) {
 	if carrying == "" {
 		log.Println("Collected water")
+		PickupChan <- "water"
 	}
 }

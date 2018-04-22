@@ -2,6 +2,7 @@ package hud
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"Deadication/player"
@@ -27,6 +28,8 @@ var (
 	lineRight  = pixel.V(1280, 689)
 
 	months = []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+
+	textColor = colornames.Black
 )
 
 // HUD is the hud struct
@@ -60,15 +63,29 @@ func (h *HUD) Update(win *pixelgl.Window, player *player.Player) {
 
 	hunger, hungerMat := h.getHunger(player)
 	hunger.Draw(win, hungerMat)
+
+	carry, carryMat := h.getCarry(player)
+	carry.Draw(win, carryMat)
 }
 
 func scaleHUDText(txt *text.Text) pixel.Matrix {
 	return pixel.IM.Scaled(txt.Orig, 1.4)
 }
 
+func (h *HUD) getCarry(p *player.Player) (*text.Text, pixel.Matrix) {
+
+	txt := text.New(pixel.V(550, 700), h.atlas)
+	txt.Color = textColor
+
+	if p.Carrying() != "" {
+		fmt.Fprintf(txt, "Carrying: %s", strings.Title(p.Carrying()))
+	}
+	return txt, scaleHUDText(txt)
+}
+
 func (h *HUD) getDate() (*text.Text, pixel.Matrix) {
 	txt := text.New(pixel.V(1155, 700), h.atlas)
-	txt.Color = colornames.Black
+	txt.Color = textColor
 
 	fmt.Fprintf(txt, "%d %s", h.day, months[h.month])
 
@@ -77,7 +94,7 @@ func (h *HUD) getDate() (*text.Text, pixel.Matrix) {
 
 func (h *HUD) getHealth(p *player.Player) (*text.Text, pixel.Matrix) {
 	txt := text.New(pixel.V(10, 700), h.atlas)
-	txt.Color = colornames.Black
+	txt.Color = textColor
 
 	fmt.Fprintf(txt, "Health %d/100", p.Health())
 
@@ -86,7 +103,7 @@ func (h *HUD) getHealth(p *player.Player) (*text.Text, pixel.Matrix) {
 
 func (h *HUD) getHunger(p *player.Player) (*text.Text, pixel.Matrix) {
 	txt := text.New(pixel.V(250, 700), h.atlas)
-	txt.Color = colornames.Black
+	txt.Color = textColor
 
 	fmt.Fprintf(txt, "Hunger %d/100", p.Hunger())
 
