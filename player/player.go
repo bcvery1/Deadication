@@ -12,6 +12,7 @@ const (
 	playerScale float64 = 1.0
 	playerSpeed float64 = 140.0
 	hungerAfter         = 4
+	hungerBy            = 1
 	// How much damage starving does
 	starveHurt int = 5
 )
@@ -33,12 +34,12 @@ func (p *Player) rect(dt float64) pixel.Rect {
 
 // Health returns the players current health
 func (p *Player) Health() int {
-	return p.health
+	return (*p).health
 }
 
 // Hunger returns the players current health
 func (p *Player) Hunger() int {
-	return p.hunger
+	return (*p).hunger
 }
 
 // Carry causes the player to begin carrying the item
@@ -49,23 +50,34 @@ func (p *Player) Carry(item string) {
 
 // Carrying returns what the player is currently carrying
 func (p *Player) Carrying() string {
-	return p.carrying
+	return (*p).carrying
 }
 
-func (p *Player) eat(points int) {
-	p.health += points
-	if p.Health() > 100 {
-		p.health = 100
+func (p *Player) setHealth(points int) {
+	if points > 100 {
+		(*p).health = 100
+	} else {
+		(*p).health = points
+	}
+}
+
+func (p *Player) setHunger(points int) {
+	if points > 100 {
+		(*p).hunger = 100
+	} else {
+		(*p).hunger = points
 	}
 }
 
 func (p *Player) statUpdate() {
 	for {
 		<-time.After(time.Second * hungerAfter)
-		p.hunger--
-		if p.hunger < 1 {
-			p.hunger = 1
-			p.health -= starveHurt
+
+		p.setHunger((*p).hunger - hungerBy)
+
+		if (*p).hunger < 1 {
+			(*p).hunger = 1
+			(*p).health -= starveHurt
 		}
 	}
 }
@@ -75,8 +87,8 @@ func (p *Player) listenChans() {
 		select {
 		case newItem := <-util.PickupChan:
 			p.Carry(newItem)
-		case health := <-util.EatChan:
-			p.eat(health)
+		case hunger := <-util.EatChan:
+			p.setHunger((*p).hunger + hunger)
 		}
 	}
 }
@@ -94,8 +106,8 @@ func NewPlayer(all map[string]*pixel.Sprite) *Player {
 		"",
 	}
 
-	go p.statUpdate()
-	go p.listenChans()
+	go (&p).statUpdate()
+	go (&p).listenChans()
 
 	return &p
 }
