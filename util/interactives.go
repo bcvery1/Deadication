@@ -51,14 +51,17 @@ var river = riverInter{
 var pen1 = pen{
 	Interactive: Interactive{"Top pen", false},
 	humans:      []*Human{},
+	food:        0,
 }
 var pen2 = pen{
 	Interactive: Interactive{"Mid pen", false},
 	humans:      []*Human{},
+	food:        0,
 }
 var pen3 = pen{
 	Interactive: Interactive{"Bottom pen", false},
 	humans:      []*Human{},
+	food:        2,
 }
 
 var house = NewHouse()

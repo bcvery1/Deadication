@@ -1,5 +1,8 @@
 package util
 
+// Money - Game money count
+var Money = 10
+
 // PickupChan - All pickups/drops for the player will run through here
 var PickupChan = make(chan string, 1)
 

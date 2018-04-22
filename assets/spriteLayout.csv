@@ -1,4 +1,6 @@
 player,0,18,1,2
+playerwalk1,7,18,1,2
+playerwalk2,8,18,1,2
 tree,1,18,1,2
 human,0,17,1,1
 house,2,16,5,4

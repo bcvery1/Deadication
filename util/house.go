@@ -97,8 +97,10 @@ func (h *House) opts(c string) []optionI {
 		var s string
 		s = cornseed
 		if h.inventory[s] == 0 {
-			o := buy{option{"Buy corn seed"}, s}
-			opts = append(opts, &o)
+			if Money >= cornseedPrice {
+				o := buy{option{"Buy corn seed 4gp"}, s, cornseedPrice}
+				opts = append(opts, &o)
+			}
 		} else {
 			str := fmt.Sprintf("Pickup corn seed [%d]", h.inventory[s])
 			o := collect{option{str}, s}
@@ -107,8 +109,10 @@ func (h *House) opts(c string) []optionI {
 
 		s = appleseed
 		if h.inventory[s] == 0 {
-			o := buy{option{"Buy apple seed"}, s}
-			opts = append(opts, &o)
+			if Money >= appleseedPrice {
+				o := buy{option{"Buy apple seed 6gp"}, s, appleseedPrice}
+				opts = append(opts, &o)
+			}
 		} else {
 			str := fmt.Sprintf("Pickup apple seed [%d]", h.inventory[s])
 			o := collect{option{str}, s}
@@ -117,8 +121,10 @@ func (h *House) opts(c string) []optionI {
 
 		s = cottonseed
 		if h.inventory[s] == 0 {
-			o := buy{option{"Buy cotton seed"}, s}
-			opts = append(opts, &o)
+			if Money >= cottonseedPrice {
+				o := buy{option{"Buy cotton seed 3gp"}, s, cottonseedPrice}
+				opts = append(opts, &o)
+			}
 		} else {
 			str := fmt.Sprintf("Pickup cotton seed [%d]", h.inventory[s])
 			o := collect{option{str}, s}
@@ -138,11 +144,13 @@ func (ss *storeItem) Action(f InteractiveI, carrying string) {
 
 type buy struct {
 	option
-	item string
+	item  string
+	price int
 }
 
 func (b *buy) Action(f InteractiveI, carrying string) {
 	HouseInvChan <- b.item
+	Money -= b.price
 }
 
 type collect struct {

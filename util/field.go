@@ -9,9 +9,12 @@ import (
 )
 
 const (
-	cottonseed = "cottonseed"
-	appleseed  = "appleseed"
-	cornseed   = "cornseed"
+	cottonseed      = "cottonseed"
+	cottonseedPrice = 3
+	appleseed       = "appleseed"
+	appleseedPrice  = 6
+	cornseed        = "cornseed"
+	cornseedPrice   = 4
 )
 
 type field struct {
@@ -65,7 +68,6 @@ func (f *field) UpdateCrop(win *pixelgl.Window, allSprites map[string]*pixel.Spr
 	spriteName := fmt.Sprintf(f.crop.spriteFmt, f.crop.stage)
 	cropSprite, ok := allSprites[spriteName]
 	if !ok {
-		log.Println("Cannot find sprite")
 		return
 	}
 

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/bcvery1/Deadication/player"
+	"github.com/bcvery1/Deadication/util"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -67,15 +68,25 @@ func (h *HUD) Update(win *pixelgl.Window, player *player.Player) {
 
 	carry, carryMat := h.getCarry(player)
 	carry.Draw(win, carryMat)
+
+	money, moneyMat := h.getMoney(player)
+	money.Draw(win, moneyMat)
 }
 
 func scaleHUDText(txt *text.Text) pixel.Matrix {
 	return pixel.IM.Scaled(txt.Orig, 1.4)
 }
 
-func (h *HUD) getCarry(p *player.Player) (*text.Text, pixel.Matrix) {
+func (h *HUD) getMoney(p *player.Player) (*text.Text, pixel.Matrix) {
+	txt := text.New(pixel.V(480, 700), h.atlas)
+	txt.Color = textColor
 
-	txt := text.New(pixel.V(550, 700), h.atlas)
+	fmt.Fprintf(txt, "Money: %dgp", util.Money)
+	return txt, scaleHUDText(txt)
+}
+
+func (h *HUD) getCarry(p *player.Player) (*text.Text, pixel.Matrix) {
+	txt := text.New(pixel.V(620, 700), h.atlas)
 	txt.Color = textColor
 
 	if p.Carrying() != "" {

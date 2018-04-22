@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -11,29 +12,62 @@ type pen struct {
 	Interactive
 	humans []*Human
 	rect   pixel.Rect
+	food   int
 }
 
 // InitPens listens for the player eating humans
 func InitPens() {
 	go func() {
+		ticker := time.NewTicker(30 * time.Second)
 		for {
-			penName := <-EatFromChan
-			Pens[penName].EatHuman()
+			select {
+			case penName := <-EatFromChan:
+				Pens[penName].EatHuman()
 
-			// Check if any humans left
-			humansLeft := false
-			for _, p := range Pens {
-				if len(p.humans) > 0 {
-					humansLeft = true
+				// Check if any humans left
+				humansLeft := false
+				for _, p := range Pens {
+					if len(p.humans) > 0 {
+						humansLeft = true
+					}
 				}
-			}
 
-			if !humansLeft {
-				// No humans left in game
-				PopupChan <- &Popup{"You have no humans left!\nWho needs food anyway..."}
+				if !humansLeft {
+					// No humans left in game
+					PopupChan <- &Popup{"You have no humans left!\nWho needs food anyway..."}
+				}
+			case <-ticker.C:
+				for _, p := range Pens {
+					// Check if human starves
+					if p.Eat() && len(p.humans) > 0 {
+						s := fmt.Sprintf("Human from %s has died from starvation\nFeed them each month!", p.Title())
+						PopupChan <- &Popup{s}
+						if len(p.humans) < 2 {
+							p.humans = []*Human{}
+						} else {
+							p.humans = p.humans[1:]
+						}
+					}
+				}
 			}
 		}
 	}()
+}
+
+// Eat reduces food within pen
+// returns if a human starves
+func (p *pen) Eat() bool {
+	if p.food == 0 {
+		return true
+	}
+
+	if p.food < len(p.humans) {
+		p.food = 0
+		return true
+	}
+
+	p.food -= len(p.humans)
+	return false
 }
 
 // AddHuman generates and adds a human to this pen
@@ -88,7 +122,7 @@ func (p *pen) Update(win *pixelgl.Window, carrying string) {
 }
 
 func (p *pen) opts(c string) []optionI {
-	o := observePen{option{"Observe pen"}}
+	o := observePen{option{"Observe pen"}, p}
 	opts := []optionI{&o}
 
 	if c == "food" {
@@ -141,10 +175,12 @@ func (ch *collectHuman) Action(p InteractiveI, carrying string) {
 
 type observePen struct {
 	option
+	p *pen
 }
 
 func (o *observePen) Action(p InteractiveI, carrying string) {
-	PopupChan <- &Popup{"This pen holds humans for eating!"}
+	s := fmt.Sprintf("This pen holds humans for eating!\n%d humans in this pen, with %d food\nFeed them each month", len(o.p.humans), o.p.food)
+	PopupChan <- &Popup{s}
 }
 
 type feedHumans struct {
