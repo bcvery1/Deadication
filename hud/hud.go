@@ -67,7 +67,7 @@ func scaleHUDText(txt *text.Text) pixel.Matrix {
 }
 
 func (h *HUD) getDate() (*text.Text, pixel.Matrix) {
-	txt := text.New(pixel.V(1170, 700), h.atlas)
+	txt := text.New(pixel.V(1155, 700), h.atlas)
 	txt.Color = colornames.Black
 
 	fmt.Fprintf(txt, "%d %s", h.day, months[h.month])
