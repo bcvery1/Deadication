@@ -113,12 +113,6 @@ func CreateBatch(sprites map[string]*pixel.Sprite, pic pixel.Picture) (*pixel.Ba
 		}
 	}
 
-	// houseV := pixel.V(200, 250)
-	// sprites["house"].Draw(batch, pixel.IM.Moved(houseV))
-	//
-	// r := TranslateRect(sprites["house"], houseV)
-	// collisions = append(collisions, r)
-
 	return batch, collisions
 }
 
