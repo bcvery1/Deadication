@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# Get the libararies
-go get -v github.com/faiface/pixel
-go get -v github.com/faiface/beep
-go get -v github.com/faiface/mainthread
-go get -v github.com/faiface/glhf
-go get -v golang.org/x/image
+rm Deadication-darwin-10.6-amd64 Deadication-linux-amd64 Deadication-windows-4.0-amd64.exe
 
-go build main.go -o DEADication
+go get -v -u github.com/karalabe/xgo
+
+xgo --targets=windows/amd64 github.com/bcvery1/Deadication
+xgo --targets=darwin/amd64 github.com/bcvery1/Deadication
+go build -o Deadication-linux-amd64 main.go
