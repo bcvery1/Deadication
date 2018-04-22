@@ -12,3 +12,6 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+Deadication-darwin-10.6-amd64
+Deadication-linux-amd64
