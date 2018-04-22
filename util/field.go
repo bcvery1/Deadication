@@ -65,7 +65,6 @@ func (f *field) UpdateCrop(win *pixelgl.Window, allSprites map[string]*pixel.Spr
 	spriteName := fmt.Sprintf(f.crop.spriteFmt, f.crop.stage)
 	cropSprite, ok := allSprites[spriteName]
 	if !ok {
-		log.Println("Cannot find sprite")
 		return
 	}
 
