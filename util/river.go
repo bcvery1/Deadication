@@ -71,7 +71,7 @@ type observeRiver struct {
 }
 
 func (o *observeRiver) Action(f InteractiveI, carrying string) {
-	PopupChan <- &Popup{"Observing river"}
+	PopupChan <- &Popup{"A gently flowing river\nPlants use water to 'live'"}
 }
 
 type collectWater struct {
