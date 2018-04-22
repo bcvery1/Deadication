@@ -83,7 +83,8 @@ type waterField struct {
 
 func (w *waterField) Action(f InteractiveI, carrying string) {
 	if carrying == "water" {
-		log.Println("Watering field")
+		s := fmt.Sprintf("You watered %s.  This will cause the plants to grow a bit faster this month", f.Title())
+		PopupChan <- &Popup{s}
 		PickupChan <- ""
 	}
 }
@@ -93,6 +94,8 @@ type plantSeeds struct {
 }
 
 func (p *plantSeeds) Action(f InteractiveI, carrying string) {
+	s := fmt.Sprintf("You planted %s in %s.  Make sure you water it each month", p.Text(), f.Title())
+	PopupChan <- &Popup{s}
 	PickupChan <- ""
 }
 
@@ -101,5 +104,6 @@ type havest struct {
 }
 
 func (h *havest) Action(f InteractiveI, carrying string) {
+	PopupChan <- &Popup{"You picked up revolting human food.  There isn't even any mold on this!"}
 	PickupChan <- "food"
 }

@@ -1,7 +1,7 @@
 package util
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -64,7 +64,7 @@ type observePen struct {
 }
 
 func (o *observePen) Action(p InteractiveI, carrying string) {
-	log.Println("Observing pen")
+	PopupChan <- &Popup{"This pen holds humans for eating!"}
 }
 
 type feedHumans struct {
@@ -72,8 +72,9 @@ type feedHumans struct {
 }
 
 func (f *feedHumans) Action(p InteractiveI, carrying string) {
-	log.Println("Feeding humans")
 	PickupChan <- ""
+	s := fmt.Sprintf("You gave food to the humans in %s", p.Title())
+	PopupChan <- &Popup{s}
 }
 
 type clotheHumans struct {
@@ -81,7 +82,8 @@ type clotheHumans struct {
 }
 
 func (c *clotheHumans) Action(p InteractiveI, carrying string) {
-	log.Println("Clothing humans")
+	s := fmt.Sprintf("You gave clothes to the humans in %s", p.Title())
+	PopupChan <- &Popup{s}
 	PickupChan <- ""
 }
 
@@ -90,6 +92,6 @@ type eatBrain struct {
 }
 
 func (e *eatBrain) Action(p InteractiveI, carrying string) {
-	log.Println("Ate a humans brain")
+	PopupChan <- &Popup{"You ate some brains!  Yum!"}
 	EatChan <- 50
 }

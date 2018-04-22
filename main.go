@@ -47,6 +47,9 @@ func run() {
 	batch, collisions := util.CreateBatch(sprites, pic)
 	interactives, zones := util.AllInteractives()
 
+	// Start listening for popups
+	util.InitPopups()
+
 	last := time.Now()
 	inZone := ""
 	for !win.Closed() {
@@ -82,6 +85,12 @@ func run() {
 
 		// Update the HUD
 		gamehud.Update(win, playerObj)
+
+		// Display any popups
+		popup, show := util.GetMessage()
+		if show {
+			popup.Draw(win)
+		}
 
 		win.Update()
 	}

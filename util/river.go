@@ -1,8 +1,6 @@
 package util
 
 import (
-	"log"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -73,7 +71,7 @@ type observeRiver struct {
 }
 
 func (o *observeRiver) Action(f InteractiveI, carrying string) {
-	log.Println("Observing river")
+	PopupChan <- &Popup{"Observing river"}
 }
 
 type collectWater struct {
@@ -82,7 +80,7 @@ type collectWater struct {
 
 func (c *collectWater) Action(f InteractiveI, carrying string) {
 	if carrying == "" {
-		log.Println("Collected water")
+		PopupChan <- &Popup{"You collected water"}
 		PickupChan <- "water"
 	}
 }
