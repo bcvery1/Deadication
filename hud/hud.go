@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"Deadication/player"
+	"github.com/bcvery1/Deadication/player"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"

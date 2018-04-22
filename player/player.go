@@ -1,8 +1,9 @@
 package player
 
 import (
-	"Deadication/util"
 	"time"
+
+	"github.com/bcvery1/Deadication/util"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"

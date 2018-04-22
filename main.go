@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	"Deadication/hud"
-	"Deadication/player"
-	"Deadication/util"
+	"github.com/bcvery1/Deadication/hud"
+	"github.com/bcvery1/Deadication/player"
+	"github.com/bcvery1/Deadication/util"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
