@@ -18,6 +18,7 @@ import (
 
 const (
 	// How long is a game day in reallife seconds
+	// Update this in util/crops.go if changed
 	daySeconds = 1
 )
 

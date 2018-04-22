@@ -7,15 +7,10 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 )
 
-type crop struct {
-	name        string
-	harvestRate int
-}
-
 type field struct {
 	Interactive
 	havestPerc int
-	crop       crop
+	crop       *Crop
 	planted    bool
 	amountLeft int
 }

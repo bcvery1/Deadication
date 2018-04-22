@@ -28,19 +28,19 @@ var (
 var field1 = field{
 	Interactive: Interactive{"Top field", false},
 	havestPerc:  0,
-	crop:        crop{"", 0},
+	crop:        NewCrop(""),
 	planted:     false,
 }
 var field2 = field{
 	Interactive: Interactive{"Mid field", false},
 	havestPerc:  0,
-	crop:        crop{"", 0},
+	crop:        NewCrop(""),
 	planted:     false,
 }
 var field3 = field{
 	Interactive: Interactive{"Bottom field", false},
 	havestPerc:  0,
-	crop:        crop{"", 0},
+	crop:        NewCrop(""),
 	planted:     false,
 }
 
