@@ -21,12 +21,6 @@ const (
 )
 
 var (
-	field2 = Interactive{"Mid field", false}
-	field3 = Interactive{"Bottom field", false}
-	pen1   = Interactive{"Top pen", false}
-	pen2   = Interactive{"Mid pen", false}
-	pen3   = Interactive{"Bottom pen", false}
-
 	titleV = pixel.V(25, 155)
 	menuV  = pixel.V(40, 155)
 )
@@ -37,9 +31,34 @@ var field1 = field{
 	crop:        crop{"", 0},
 	planted:     false,
 }
+var field2 = field{
+	Interactive: Interactive{"Mid field", false},
+	havestPerc:  0,
+	crop:        crop{"", 0},
+	planted:     false,
+}
+var field3 = field{
+	Interactive: Interactive{"Bottom field", false},
+	havestPerc:  0,
+	crop:        crop{"", 0},
+	planted:     false,
+}
 
 var river = riverInter{
 	Interactive: Interactive{"River", false},
+}
+
+var pen1 = pen{
+	Interactive: Interactive{"Top pen", false},
+	humans:      []*human{},
+}
+var pen2 = pen{
+	Interactive: Interactive{"Mid pen", false},
+	humans:      []*human{},
+}
+var pen3 = pen{
+	Interactive: Interactive{"Bottom pen", false},
+	humans:      []*human{},
 }
 
 type option struct {
