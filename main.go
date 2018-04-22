@@ -50,7 +50,7 @@ func run() {
 
     dt := time.Since(last).Seconds()
     last = time.Now()
-
+    
     batch.Draw(win)
 
     playerObj.Update(win, dt, collisions)

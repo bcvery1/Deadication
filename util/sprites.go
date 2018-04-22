@@ -78,6 +78,8 @@ func CreateBatch(sprites map[string]*pixel.Sprite, pic pixel.Picture) (*pixel.Ba
   batch := pixel.NewBatch(&pixel.TrianglesData{}, pic)
   collisions := []pixel.Rect{}
 
+  DrawRiver(batch)
+
   assetsF, err := os.Open(assetPlacementPath)
   if err != nil {
     log.Fatal(err)
