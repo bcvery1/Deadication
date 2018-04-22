@@ -17,11 +17,23 @@ type Player struct {
 	sprites       map[string]*pixel.Sprite
 	currentAction string
 	pos           pixel.Vec
+	health        int
+	hunger        int
 }
 
 func (p *Player) rect(dt float64) pixel.Rect {
 	s := p.CurrentSprite(dt)
 	return util.TranslateRect(s, p.pos)
+}
+
+// Health returns the players current health
+func (p *Player) Health() int {
+	return p.health
+}
+
+// Hunger returns the players current health
+func (p *Player) Hunger() int {
+	return p.hunger
 }
 
 // NewPlayer creates a new player object
@@ -32,6 +44,8 @@ func NewPlayer(all map[string]*pixel.Sprite) *Player {
 		sprites,
 		"idle",
 		pixel.V(120, 120),
+		100,
+		100,
 	}
 }
 

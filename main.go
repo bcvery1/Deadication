@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"Deadication/hud"
 	"Deadication/player"
 	"Deadication/util"
 
@@ -37,6 +38,7 @@ func run() {
 
 	sprites, pic := util.GetSprites()
 	playerObj := player.NewPlayer(sprites)
+	gamehud := hud.NewHUD()
 	batch, collisions := util.CreateBatch(sprites, pic)
 	interactives, zones := util.AllInteractives()
 
@@ -71,6 +73,9 @@ func run() {
 				zone.Deactivate()
 			}
 		}
+
+		// Update the HUD
+		gamehud.Update(win, playerObj)
 
 		win.Update()
 	}
