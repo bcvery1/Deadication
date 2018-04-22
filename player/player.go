@@ -2,6 +2,7 @@ package player
 
 import (
 	"Deadication/util"
+	"time"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -10,6 +11,9 @@ import (
 const (
 	playerScale float64 = 1.0
 	playerSpeed float64 = 140.0
+	hungerAfter         = 4
+	// How much damage starving does
+	starveHurt int = 5
 )
 
 // Player holds data on the player
@@ -36,17 +40,32 @@ func (p *Player) Hunger() int {
 	return p.hunger
 }
 
+func (p *Player) statUpdate() {
+	for {
+		<-time.After(time.Second * hungerAfter)
+		p.hunger--
+		if p.hunger < 1 {
+			p.hunger = 1
+			p.health -= starveHurt
+		}
+	}
+}
+
 // NewPlayer creates a new player object
 func NewPlayer(all map[string]*pixel.Sprite) *Player {
 	sprites := make(map[string]*pixel.Sprite)
 	sprites["idle"] = all["player"]
-	return &Player{
+	p := Player{
 		sprites,
 		"idle",
 		pixel.V(120, 120),
 		100,
 		100,
 	}
+
+	go p.statUpdate()
+
+	return &p
 }
 
 // CurrentSprite returns the sprite to display
