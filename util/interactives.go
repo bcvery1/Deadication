@@ -27,6 +27,9 @@ var (
 	pen2   = Interactive{"Mid pen", false}
 	pen3   = Interactive{"Bottom pen", false}
 	river  = Interactive{"River", false}
+
+	titleV = pixel.V(25, 155)
+	menuV  = pixel.V(40, 155)
 )
 
 var field1 = field{
@@ -65,27 +68,56 @@ type InteractiveI interface {
 	Deactivate()
 	Title() string
 	IsActive() bool
-	Update(*pixelgl.Window)
+	Update(*pixelgl.Window, string)
 }
 
 // Update updates the interactive in the game world
-func (i *Interactive) Update(win *pixelgl.Window) {
+func (i *Interactive) Update(win *pixelgl.Window, carrying string) {
 	if !i.IsActive() {
 		return
 	}
-	log.Println("updating")
 
+	// Draw box
+	imd := getBox()
+	imd.Draw(win)
+
+	// Draw title
+	title, scale := getText(-1, i.Title(), 1.4, titleV)
+	title.Draw(win, scale)
+
+	shiftV := pixel.V(0, -20)
+	for j, opt := range i.opts(carrying) {
+		v := menuV.Sub(shiftV.Scaled(float64(j)))
+		optTxt, scale := getText(j+1, opt.Text(), 1.1, v)
+		optTxt.Draw(win, scale)
+	}
+}
+
+func getBox() *imdraw.IMDraw {
 	imd := imdraw.New(nil)
 	imd.Color = colornames.Whitesmoke
 	imd.Push(pixel.V(0, 0), pixel.V(300, 175))
 	imd.Rectangle(0)
-	imd.Draw(win)
 
-	atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
-	title := text.New(pixel.V(30, 155), atlas)
-	title.Color = colornames.Black
-	fmt.Fprintf(title, i.Title())
-	title.Draw(win, pixel.IM.Scaled(title.Orig, 1.4))
+	return imd
+}
+
+func getAtlas() *text.Atlas {
+	return text.NewAtlas(basicfont.Face7x13, text.ASCII)
+}
+
+func getText(i int, txt string, scale float64, v pixel.Vec) (*text.Text, pixel.Matrix) {
+	atlas := getAtlas()
+	outputText := text.New(v, atlas)
+	outputText.Color = colornames.Black
+	if i < 0 {
+		fmt.Fprintf(outputText, txt)
+	} else {
+		fmt.Fprintf(outputText, "%d - %s", i, txt)
+	}
+
+	return outputText, pixel.IM.Scaled(outputText.Orig, scale)
+
 }
 
 // IsActive returns whether this interactive is currently active
@@ -99,7 +131,6 @@ func (i *Interactive) Title() string {
 }
 
 func (i *Interactive) opts(c string) []optionI {
-	log.Println("In opts")
 	return []optionI{}
 }
 
@@ -107,7 +138,6 @@ func (i *Interactive) opts(c string) []optionI {
 // Takes what the player is currently carrying
 func (i *Interactive) Activate(carrying string, win *pixelgl.Window) {
 	i.active = true
-	i.opts(carrying)
 }
 
 // Deactivate stops the interactives behaivour
@@ -153,22 +183,4 @@ func AllInteractives() (map[string]InteractiveI, map[pixel.Rect]string) {
 	m["river"] = &river
 
 	return m, r
-}
-
-func drawBox(i InteractiveI, win *pixelgl.Window) {
-	go func(i InteractiveI) {
-		for i.IsActive() {
-			imd := imdraw.New(nil)
-			imd.Color = colornames.Whitesmoke
-			imd.Push(pixel.V(0, 0), pixel.V(300, 175))
-			imd.Rectangle(0)
-			imd.Draw(win)
-
-			atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
-			title := text.New(pixel.V(30, 155), atlas)
-			title.Color = colornames.Black
-			fmt.Fprintf(title, i.Title())
-			title.Draw(win, pixel.IM.Scaled(title.Orig, 1.4))
-		}
-	}(i)
 }

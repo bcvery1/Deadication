@@ -70,7 +70,7 @@ func run() {
 				// Set inZone
 				inZone = newZone
 			}
-			interactives[newZone].Update(win)
+			interactives[newZone].Update(win, playerObj.Carrying())
 		} else {
 			// Reset inZone
 			inZone = ""

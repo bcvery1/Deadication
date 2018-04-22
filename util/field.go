@@ -3,6 +3,7 @@ package util
 import (
 	"log"
 
+	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
 
@@ -22,8 +23,57 @@ func (f *field) IsActive() bool {
 	return f.Interactive.IsActive()
 }
 
+func (f *field) Update(win *pixelgl.Window, carrying string) {
+	if !f.IsActive() {
+		return
+	}
+
+	// Draw box
+	imd := getBox()
+	imd.Draw(win)
+
+	// Draw title
+	title, scale := getText(-1, f.Title(), 1.4, titleV)
+	title.Draw(win, scale)
+
+	shiftV := pixel.V(0, 30)
+	fieldoptions := f.opts(carrying)
+	for j, opt := range fieldoptions {
+		v := menuV.Sub(shiftV.Scaled(float64(j + 1)))
+		optTxt, scale := getText(j+1, opt.Text(), 1.1, v)
+		optTxt.Draw(win, scale)
+	}
+
+	// Check if the user presses a number key to select an option
+	if win.JustPressed(pixelgl.Key1) {
+		if len(fieldoptions) > 0 {
+			fieldoptions[0].Action(f, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key2) {
+		if len(fieldoptions) > 1 {
+			fieldoptions[1].Action(f, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key3) {
+		if len(fieldoptions) > 2 {
+			fieldoptions[2].Action(f, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key4) {
+		if len(fieldoptions) > 3 {
+			fieldoptions[3].Action(f, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key5) {
+		if len(fieldoptions) > 4 {
+			fieldoptions[4].Action(f, carrying)
+		}
+	}
+}
+
 func (f *field) Activate(carrying string, win *pixelgl.Window) {
-	f.Interactive.Activate(carrying, win)
+	f.Interactive.active = true
 	log.Printf("Field activate %s", carrying)
 	f.opts(carrying)
 }
