@@ -2,9 +2,11 @@ package main
 
 import (
   "log"
+  "image/color"
   "time"
 
-  "Deadication/gameinfo"
+  "Deadication/player"
+  "Deadication/util"
 
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
@@ -13,16 +15,14 @@ import (
 )
 
 const (
-  winWidth float64  = 1024
-  winHeight float64 = 768
+  winWidth  float64 = 1280
+  winHeight float64 = 720
 )
 
 var (
-  backgroundColour = colornames.Forestgreen
-  sceneChange chan string = make(chan string, 1)
+  backgroundColour color.RGBA = colornames.Forestgreen
 )
 
-// Main function pixel will run
 func run() {
   cfg := pixelgl.WindowConfig{
     Title:  "DEADication",
@@ -36,22 +36,24 @@ func run() {
   win.SetSmooth(true)
   win.Clear(backgroundColour)
 
-  game := gameinfo.NewGame(win, &(pixel.ZV), "farm")
+  sprites, pic := util.GetSprites()
+  playerObj := player.NewPlayer(sprites)
+  batch, collisions := util.CreateBatch(sprites, pic)
 
   last := time.Now()
   for !win.Closed() {
-    // Clear previously drawn images
     win.Clear(backgroundColour)
+
+    if win.JustPressed(pixelgl.MouseButtonLeft) {
+      log.Println(win.MousePosition())
+    }
 
     dt := time.Since(last).Seconds()
     last = time.Now()
 
-    // Update the active scene
-    game.Update(dt)
+    batch.Draw(win)
 
-    // Set the cam as the viewpoint
-    cam := pixel.IM.Moved(win.Bounds().Center().Sub(*game.CamPos))
-    win.SetMatrix(cam)
+    playerObj.Update(win, dt, collisions)
 
     win.Update()
   }
