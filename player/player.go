@@ -18,6 +18,10 @@ const (
 	starveHurt int = 5
 )
 
+var (
+	playercycle = 0.0
+)
+
 // Player holds data on the player
 type Player struct {
 	sprites       map[string]*pixel.Sprite
@@ -98,6 +102,8 @@ func (p *Player) listenChans() {
 func NewPlayer(all map[string]*pixel.Sprite) *Player {
 	sprites := make(map[string]*pixel.Sprite)
 	sprites["idle"] = all["player"]
+	sprites["walk1"] = all["playerwalk1"]
+	sprites["walk2"] = all["playerwalk2"]
 	p := Player{
 		sprites,
 		"idle",
@@ -136,10 +142,10 @@ func (p *Player) CollidesWith(dt float64, rect pixel.Rect) bool {
 // Update draws the player in a new position on the page
 // Returns if it is within a zone
 func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect, zones map[pixel.Rect]string) string {
-	p.CurrentSprite(dt).Draw(win, pixel.IM.Scaled(p.pos, playerScale).Moved(p.pos))
-
+	var walking = false
 	// Try move right
 	if win.Pressed(pixelgl.KeyA) || win.Pressed(pixelgl.KeyLeft) {
+		walking = true
 		p.pos.X -= playerSpeed * dt
 		if p.Collides(dt, collisions) {
 			p.pos.X += playerSpeed * dt
@@ -150,6 +156,7 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 	}
 	// Try move left
 	if win.Pressed(pixelgl.KeyD) || win.Pressed(pixelgl.KeyRight) {
+		walking = true
 		p.pos.X += playerSpeed * dt
 		if p.pos.X > win.Bounds().Max.X {
 			p.pos.X = win.Bounds().Max.X
@@ -160,6 +167,7 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 	}
 	// Try move down
 	if win.Pressed(pixelgl.KeyS) || win.Pressed(pixelgl.KeyDown) {
+		walking = true
 		p.pos.Y -= playerSpeed * dt
 		if p.pos.Y < 0.0 {
 			p.pos.Y = 0.0
@@ -170,6 +178,7 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 	}
 	// Try move up
 	if win.Pressed(pixelgl.KeyW) || win.Pressed(pixelgl.KeyUp) {
+		walking = true
 		p.pos.Y += playerSpeed * dt
 		if p.pos.Y > win.Bounds().Max.Y {
 			p.pos.Y = win.Bounds().Max.Y
@@ -178,6 +187,22 @@ func (p *Player) Update(win *pixelgl.Window, dt float64, collisions []pixel.Rect
 			p.pos.Y -= playerSpeed * dt
 		}
 	}
+
+	if !walking {
+		p.currentAction = "idle"
+	} else {
+		if playercycle > 0.5 {
+			p.currentAction = "walk1"
+			if playercycle > 1.0 {
+				playercycle = 0.0
+			}
+		} else {
+			p.currentAction = "walk2"
+		}
+		playercycle += dt
+	}
+
+	p.CurrentSprite(dt).Draw(win, pixel.IM.Scaled(p.pos, playerScale).Moved(p.pos))
 
 	// Check if player is within a zone
 	for r, z := range zones {
