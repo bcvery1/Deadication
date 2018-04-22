@@ -45,31 +45,7 @@ func (f *field) Update(win *pixelgl.Window, carrying string) {
 	}
 
 	// Check if the user presses a number key to select an option
-	if win.JustPressed(pixelgl.Key1) {
-		if len(fieldoptions) > 0 {
-			fieldoptions[0].Action(f, carrying)
-		}
-	}
-	if win.JustPressed(pixelgl.Key2) {
-		if len(fieldoptions) > 1 {
-			fieldoptions[1].Action(f, carrying)
-		}
-	}
-	if win.JustPressed(pixelgl.Key3) {
-		if len(fieldoptions) > 2 {
-			fieldoptions[2].Action(f, carrying)
-		}
-	}
-	if win.JustPressed(pixelgl.Key4) {
-		if len(fieldoptions) > 3 {
-			fieldoptions[3].Action(f, carrying)
-		}
-	}
-	if win.JustPressed(pixelgl.Key5) {
-		if len(fieldoptions) > 4 {
-			fieldoptions[4].Action(f, carrying)
-		}
-	}
+	doOptions(win, fieldoptions, carrying, f)
 }
 
 func (f *field) Activate(carrying string, win *pixelgl.Window) {

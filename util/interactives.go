@@ -184,3 +184,31 @@ func AllInteractives() (map[string]InteractiveI, map[pixel.Rect]string) {
 
 	return m, r
 }
+
+func doOptions(win *pixelgl.Window, optionlist []optionI, carrying string, i InteractiveI) {
+	if win.JustPressed(pixelgl.Key1) {
+		if len(optionlist) > 0 {
+			optionlist[0].Action(i, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key2) {
+		if len(optionlist) > 1 {
+			optionlist[1].Action(i, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key3) {
+		if len(optionlist) > 2 {
+			optionlist[2].Action(i, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key4) {
+		if len(optionlist) > 3 {
+			optionlist[3].Action(i, carrying)
+		}
+	}
+	if win.JustPressed(pixelgl.Key5) {
+		if len(optionlist) > 4 {
+			optionlist[4].Action(i, carrying)
+		}
+	}
+}
