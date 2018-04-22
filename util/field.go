@@ -1,6 +1,8 @@
 package util
 
 import (
+	"log"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -15,10 +17,6 @@ type field struct {
 	havestPerc int
 	crop       crop
 	planted    bool
-}
-
-func (f *field) IsActive() bool {
-	return f.Interactive.IsActive()
 }
 
 func (f *field) Update(win *pixelgl.Window, carrying string) {
@@ -46,11 +44,6 @@ func (f *field) Update(win *pixelgl.Window, carrying string) {
 	doOptions(win, fieldoptions, carrying, f)
 }
 
-func (f *field) Activate(carrying string) {
-	f.Interactive.active = true
-	f.opts(carrying)
-}
-
 func (f *field) opts(c string) []optionI {
 	observe := observeField{option{"Observe field"}}
 	opts := []optionI{&observe}
@@ -72,11 +65,19 @@ type observeField struct {
 	option
 }
 
+func (o *observeField) Action(f InteractiveI, carrying string) {
+	log.Println("Observing field")
+}
+
 type waterField struct {
 	option
 }
 
-func (w *waterField) Action(f InteractiveI, carrying string) {}
+func (w *waterField) Action(f InteractiveI, carrying string) {
+	if carrying == "water" {
+		log.Println("Watering field")
+	}
+}
 
 type plantSeeds struct {
 	option

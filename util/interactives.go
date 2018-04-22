@@ -26,7 +26,6 @@ var (
 	pen1   = Interactive{"Top pen", false}
 	pen2   = Interactive{"Mid pen", false}
 	pen3   = Interactive{"Bottom pen", false}
-	river  = Interactive{"River", false}
 
 	titleV = pixel.V(25, 155)
 	menuV  = pixel.V(40, 155)
@@ -37,6 +36,10 @@ var field1 = field{
 	havestPerc:  0,
 	crop:        crop{"", 0},
 	planted:     false,
+}
+
+var river = riverInter{
+	Interactive: Interactive{"River", false},
 }
 
 type option struct {
