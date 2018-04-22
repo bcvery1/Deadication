@@ -102,7 +102,7 @@ func run() {
 
 		// Update human movements
 		for _, p := range util.Pens {
-			p.UpdateHumans(win, dt)
+			p.UpdateHumans(win, dt, sprites)
 		}
 
 		// Update the HUD

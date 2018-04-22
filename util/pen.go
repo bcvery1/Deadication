@@ -47,9 +47,18 @@ func (p *pen) EatHuman() {
 	p.humans = p.humans[1:]
 }
 
-func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64) {
+func (p *pen) UpdateHumans(win *pixelgl.Window, dt float64, sprites map[string]*pixel.Sprite) {
 	for _, h := range p.humans {
 		h.Update(p, win, dt)
+	}
+
+	// Handle breeding
+	if len(p.humans) > 1 {
+		if myRand.Intn(2000) == 2000 {
+			s := fmt.Sprintf("Humans in %s have made a baby", p.Title())
+			PopupChan <- &Popup{s}
+			p.AddHuman(sprites)
+		}
 	}
 }
 
