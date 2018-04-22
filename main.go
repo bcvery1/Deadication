@@ -66,7 +66,7 @@ func run() {
 			// Player is in a named interactive zone
 			// Only activate if changed zones
 			if newZone != inZone {
-				interactives[newZone].Activate()
+				interactives[newZone].Activate(playerObj.Carrying())
 				// Set inZone
 				inZone = newZone
 			}
