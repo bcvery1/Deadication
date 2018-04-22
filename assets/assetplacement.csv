@@ -1,5 +1,8 @@
 house,200,250,true
 bridge,525,550,false
+pen,1060,377,true
+pen,480,90,true
+pen,1080,565,true
 field,886,160,false
 field,950,160,false
 field,1014,160,false
