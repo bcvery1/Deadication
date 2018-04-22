@@ -58,7 +58,7 @@ var pen2 = pen{
 }
 var pen3 = pen{
 	Interactive: Interactive{"Bottom pen", false},
-	humans:      []*human{},
+	humans:      []*human{&human{}, &human{}},
 }
 
 type option struct {
