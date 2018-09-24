@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -48,13 +47,10 @@ func InitFields() {
 func (f *field) harvest() {
 	// Decrement amount of crops left
 	f.amountLeft--
-	log.Println(f.amountLeft)
 
 	if f.amountLeft == 0 {
-		log.Println(f.planted)
 		// If the plant reverts, field is still planted
 		f.planted = f.crop.Revert()
-		log.Println(f.planted)
 	}
 }
 
