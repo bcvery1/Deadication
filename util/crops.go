@@ -59,7 +59,7 @@ func NewCrop(name string) *Crop {
 // Otherwise it just returns false
 func (c *Crop) Revert() bool {
 	c.stage = c.revertTo
-	if c.revertTo < 0 {
+	if c.revertTo == 0 {
 		go c.RunUpdateLoop()
 		return true
 	}
