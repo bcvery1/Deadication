@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"time"
+	"image/color"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -12,7 +13,7 @@ import (
 )
 
 var (
-	backgroundcolor = colornames.Whitesmoke
+	backgroundcolor = color.RGBA{0xf5, 0xf5, 0xf5, 0x88}
 	bordercolor     = colornames.Black
 	textcolor       = colornames.Black
 
